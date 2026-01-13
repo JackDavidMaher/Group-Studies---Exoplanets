@@ -1,4 +1,7 @@
-We are looking for sub-Neptunes with JWST Data
+We are looking at sub-Neptunes with the JWST
 
-Goal:
-figure out observations to make search for sub-Neptunes
+Mission:
+Plan a large (roughly 100-200 hours, up to 500 hours) JWST program to identify trends in sub-Neptune atmospheres
+    - Simulate exoplant atmosphere observations
+    - Find which targets and observationsare needed to identify a trend in cloudiness vs temperature.
+    We are looking at known exoplanets so we are not going to waste time waiting for a transit.
