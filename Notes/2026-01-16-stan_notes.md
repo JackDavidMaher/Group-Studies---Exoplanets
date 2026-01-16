@@ -27,4 +27,6 @@ fed back on management plan with Sam (looking good),
 moved some folders around with code and data, 
 rewriting filtering code for legibility and ease of reuse
 
-QUESTION: how do we deal with multiple rows for each planet with different data 
+QUESTION: how do we deal with multiple rows for each planet with different data?
+
+- deal with this next time
