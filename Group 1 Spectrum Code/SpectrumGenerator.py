@@ -101,10 +101,14 @@ while rowCount < len(planetaryParameters):
 	lam = np.linspace(0.61,5.0,200)
 
 	log_xsec_dict = dict()
-	interp_xsec = RegularGridInterpolator((lam_h2o,P_h2o,T_h2o),xsec_h2o,'linear')
-	lamlam, PP = np.meshgrid(lam,P,indexing="ij")
+	interp_xsec = RegularGridInterpolator((lam_h2o, P_h2o, T_h2o), xsec_h2o, method='linear', bounds_error=False, fill_value=None)
+	lamlam, PP = np.meshgrid(lam, P, indexing="ij")
 
-	log_xsec_dict['h2o'] = interp_xsec((lamlam,PP,T[0])) # this assumes that the atmosphere is isothermal
+	# Ensure requested temperature is inside the interpolator grid (avoid out-of-bounds)
+	T0 = np.clip(T[0], T_h2o.min(), T_h2o.max())
+	# Build points with shape (npoints, ndim) for the interpolator, then reshape back
+	pts = np.vstack((lamlam.ravel(), PP.ravel(), np.full(lamlam.size, T0))).T
+	log_xsec_dict['h2o'] = interp_xsec(pts).reshape(lamlam.shape)  # this assumes an isothermal atmosphere
 
 	log_cia_dict = dict()
 	log_cia_dict['h2h2'] = np.interp(lam, lam_h2h2, xsec_h2h2)
