@@ -52,7 +52,7 @@ while rowCount < len(planetaryParameters):
 		r[i] = r[i+1] - ( sc.k * 0.5 * (T[i+1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i+1])
 	# First, set up a dictionary which will contain all the log mixing ratios, and input the abundances of all molecules except H2 and He
 	logX = dict()
-	logX['h2o'] = -3.0
+	logX['h2o'] = 0
 	#logX['ch4'] = -3.0
 	#logX['co'] = -3.0
 	#logX['co2'] = -3.0
@@ -167,3 +167,4 @@ while rowCount < len(planetaryParameters):
 	plt.ylabel('Transit Depth (ppm)')
 	#plt.xlim([1.1,1.7])
 	plt.savefig(f'TransmissionSpectrum{rowCount}.png')
+	plt.clf()
