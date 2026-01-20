@@ -28,8 +28,8 @@ while rowCount < len(planetaryParameters):
 	Pcloud *= 1.0e5             # Convert Pcloud from bar to Pa
 	Pref *= 1.0e5               # Convert Pref from bar to Pa
 	mu *= sc.u                  # Convert mu from atomic mass units to kg
-	print(f"Processing planet with {header[0]}={Rp}, {header[1]}={Mp}, {header[2]}={Tp}, {header[3]}={mu}, {header[4]}={Pcloud}, {header[5]}={Pref}, {header[6]}={Rs}")
-	print(rowCount,len(planetaryParameters))
+	#print(f"Processing planet with {header[0]}={Rp}, {header[1]}={Mp}, {header[2]}={Tp}, {header[3]}={mu}, {header[4]}={Pcloud}, {header[5]}={Pref}, {header[6]}={Rs}")
+	#print(rowCount,len(planetaryParameters))
 	rowCount=rowCount+1
 
 	P = np.logspace(2.0,-5,100) * 1.0e5
@@ -82,7 +82,7 @@ while rowCount < len(planetaryParameters):
 	for mol in logX.keys():
 		mu += np.power(10.0,logX[mol])*mmw[mol]
 
-	print("The mean molecular weight is:", mu)
+	#print("The mean molecular weight is:", mu)
 
 
 
