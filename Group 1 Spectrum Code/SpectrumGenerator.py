@@ -22,7 +22,8 @@ while rowCount < len(planetaryParameters):
 	mu = planetaryParameters[rowCount][3]  # Mean molecular weight in atomic mass units
 	Pcloud = planetaryParameters[rowCount][4]  # Pressure at top of cloud deck in bar
 	Pref = planetaryParameters[rowCount][5]   # Reference pressure in bar
-	Rs = planetaryParameters[rowCount][6]  # Stellar radius in units of Solar radii        
+	Rs = planetaryParameters[rowCount][6]  # Stellar radius in units of Solar radii     
+	PName = planetaryParameters[rowCount][7]  # Planet name (string)   
 	Rp *= const.R_earth.value   # Convert Rp from units of R_Earth to m
 	Rs *= const.R_sun.value     # Convert Rs from units of R_Sun to m
 	Pcloud *= 1.0e5             # Convert Pcloud from bar to Pa
@@ -165,6 +166,7 @@ while rowCount < len(planetaryParameters):
 	plt.plot(lam,transit_depth*1e6) #convert transit_depth into units of ppm
 	plt.xlabel('Wavelength (microns)')
 	plt.ylabel('Transit Depth (ppm)')
+	plt.title(f'Transmission Spectrum of {PName}')
 	#plt.xlim([1.1,1.7])
-	plt.savefig(f'TransmissionSpectrum{rowCount}.png')
+	plt.savefig(f'TransmissionSpectrum{PName}.png')
 	plt.clf()
