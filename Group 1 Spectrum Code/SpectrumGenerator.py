@@ -9,10 +9,18 @@ with open("Group 1 Spectrum Code/PlanetaryParameters.csv", newline="") as Planet
 	reader = csv.reader(PlanetaryParametersFile)
 	header = next(reader)
 	data = []
+	planetNames = []
 	for row in reader:
-		conv = [float(item.strip()) if item.strip() != "" else np.nan for item in row]
+		# strip whitespace from each item
+		row = [item.strip() for item in row]
+		# assume the last column is the planet name (non-numeric)
+		if len(row) == 0:
+			continue
+		*nums, name = row
+		conv = [float(item) if item != "" else np.nan for item in nums]
 		data.append(conv)
-planetaryParameters = np.array(data, dtype=float)
+		planetNames.append(name)
+	planetaryParameters = np.array(data, dtype=float)
 
 rowCount=0
 while rowCount < len(planetaryParameters):
@@ -23,7 +31,7 @@ while rowCount < len(planetaryParameters):
 	Pcloud = planetaryParameters[rowCount][4]  # Pressure at top of cloud deck in bar
 	Pref = planetaryParameters[rowCount][5]   # Reference pressure in bar
 	Rs = planetaryParameters[rowCount][6]  # Stellar radius in units of Solar radii     
-	PName = planetaryParameters[rowCount][7]  # Planet name (string)   
+	PName = planetNames[rowCount]  # Planet name (string)   
 	Rp *= const.R_earth.value   # Convert Rp from units of R_Earth to m
 	Rs *= const.R_sun.value     # Convert Rs from units of R_Sun to m
 	Pcloud *= 1.0e5             # Convert Pcloud from bar to Pa
