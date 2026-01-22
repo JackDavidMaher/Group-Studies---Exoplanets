@@ -10,8 +10,8 @@
 #endif
 int main(void)
 {
-    // Directory containing spectrum images
-    const char *dirpath = "SpectrumPlots";
+    const char *dirpath = "..";
+    const char prefix[] = "TransmissionSpectrum";
     DIR *d = opendir(dirpath);
     if (!d)
     {
@@ -24,8 +24,7 @@ int main(void)
     int errors = 0;
     while ((ent = readdir(d)) != NULL)
     {
-        // skip current and parent directories
-        if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
+        if (strncmp(ent->d_name, prefix, sizeof(prefix) - 1) != 0)
             continue;
 
         if (snprintf(fullpath, sizeof(fullpath), "%s/%s", dirpath, ent->d_name) >= (int)sizeof(fullpath))
@@ -43,7 +42,6 @@ int main(void)
             continue;
         }
 
-        // skips deleting directories (allows for storing of permentant files if needed)
         if (S_ISDIR(st.st_mode))
         {
             fprintf(stderr, "skipping directory: %s\n", fullpath);

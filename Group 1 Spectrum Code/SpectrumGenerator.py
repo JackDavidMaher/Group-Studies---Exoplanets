@@ -40,9 +40,7 @@ with open("Group 1 Spectrum Code/PlanetaryParameters.csv", newline="") as Planet
 	data = []
 	planetNames = []
 	for row in reader:
-		# strip whitespace from each item
 		row = [item.strip() for item in row]
-		# assume the last column is the planet name (non-numeric)
 		if len(row) == 0:
 			continue
 		*nums, name = row
