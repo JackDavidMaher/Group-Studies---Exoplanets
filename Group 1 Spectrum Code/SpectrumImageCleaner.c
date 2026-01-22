@@ -10,8 +10,7 @@
 #endif
 int main(void)
 {
-    const char *dirpath = "..";
-    const char prefix[] = "TransmissionSpectrum";
+    const char *dirpath = "SpectrumPlots";
     DIR *d = opendir(dirpath);
     if (!d)
     {
@@ -24,7 +23,8 @@ int main(void)
     int errors = 0;
     while ((ent = readdir(d)) != NULL)
     {
-        if (strncmp(ent->d_name, prefix, sizeof(prefix) - 1) != 0)
+        /* skip current/parent directories */
+        if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
             continue;
 
         if (snprintf(fullpath, sizeof(fullpath), "%s/%s", dirpath, ent->d_name) >= (int)sizeof(fullpath))
@@ -42,6 +42,7 @@ int main(void)
             continue;
         }
 
+        /* skip directories; remove everything else (regular files, symlinks, etc.) */
         if (S_ISDIR(st.st_mode))
         {
             fprintf(stderr, "skipping directory: %s\n", fullpath);
