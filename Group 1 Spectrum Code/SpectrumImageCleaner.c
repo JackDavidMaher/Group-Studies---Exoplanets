@@ -10,7 +10,10 @@
 #endif
 int main(void)
 {
+<<<<<<< HEAD
     // Directory containing spectrum images
+=======
+>>>>>>> 4d54eaf (Jack maher (#40))
     const char *dirpath = "SpectrumPlots";
     DIR *d = opendir(dirpath);
     if (!d)
@@ -24,7 +27,11 @@ int main(void)
     int errors = 0;
     while ((ent = readdir(d)) != NULL)
     {
+<<<<<<< HEAD
         // skip current and parent directories
+=======
+        /* skip current/parent directories */
+>>>>>>> 4d54eaf (Jack maher (#40))
         if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
             continue;
 
@@ -43,7 +50,11 @@ int main(void)
             continue;
         }
 
+<<<<<<< HEAD
         // skips deleting directories (allows for storing of permentant files if needed)
+=======
+        /* skip directories; remove everything else (regular files, symlinks, etc.) */
+>>>>>>> 4d54eaf (Jack maher (#40))
         if (S_ISDIR(st.st_mode))
         {
             fprintf(stderr, "skipping directory: %s\n", fullpath);
