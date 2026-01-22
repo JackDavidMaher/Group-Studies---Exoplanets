@@ -4,14 +4,10 @@ from scipy.interpolate import RegularGridInterpolator
 import astropy.constants as const
 import matplotlib.pyplot as plt
 import csv
-
-
 import os
 import subprocess
 import shutil
 import sys
-
-# Run SpectrumImageCleaner C program at script start
 script_dir = os.path.dirname(os.path.abspath(__file__))
 c_src = os.path.join(script_dir, 'SpectrumImageCleaner.c')
 bin_path = os.path.join(script_dir, 'SpectrumImageCleaner')
@@ -24,7 +20,6 @@ if not os.path.isfile(bin_path) or not os.access(bin_path, os.X_OK):
 	compile_proc = subprocess.run([gcc, '-O2', '-o', bin_path, c_src], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 	if compile_proc.returncode != 0:
 		sys.exit(f"Failed to compile SpectrumImageCleaner.c:\n{compile_proc.stderr}")
-# Run the binary
 run_proc = subprocess.run([bin_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=script_dir)
 if run_proc.returncode != 0:
 	sys.exit(f"SpectrumImageCleaner failed:\n{run_proc.stderr}")
@@ -205,5 +200,18 @@ while rowCount < len(planetaryParameters):
 	plt.ylabel('Transit Depth (ppm)')
 	plt.title(f'Transmission Spectrum of {PName}')
 	#plt.xlim([1.1,1.7])
-	plt.savefig(f'TransmissionSpectrum{PName}.png')
+
+	# Ensure output directory exists and save CSV for the plotted spectrum
+	plots_dir = os.path.join(script_dir, 'SpectrumPlots')
+	os.makedirs(plots_dir, exist_ok=True)
+	safe_name = PName.replace(' ', '_').replace('/', '_')
+	csv_path = os.path.join(plots_dir, f'TransmissionSpectrum_{safe_name}.csv')
+	with open(csv_path, 'w', newline='') as csvfile:
+		writer = csv.writer(csvfile)
+		writer.writerow(['wavelength_micron', 'transit_depth_ppm'])
+		for w, td in zip(lam, transit_depth*1e6):
+			writer.writerow([f"{w:.6e}", f"{td:.12e}"])
+
+	# Save the plot into the same output directory
+	plt.savefig(os.path.join(plots_dir, f'TransmissionSpectrum_{safe_name}.png'))
 	plt.clf()
