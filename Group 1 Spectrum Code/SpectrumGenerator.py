@@ -53,15 +53,19 @@ while rowCount < len(planetaryParameters):
 		r[i] = r[i+1] - ( sc.k * 0.5 * (T[i+1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i+1])
 	# First, set up a dictionary which will contain all the log mixing ratios, and input the abundances of all molecules except H2 and He
 	logX = dict()
-	logX['h2o'] = 0
-	#logX['ch4'] = -3.0
-	#logX['co'] = -3.0
-	#logX['co2'] = -3.0
-	#logX['nh3'] = -3.0
+	logX['h2o'] = -1.1
+	logX['ch4'] = -1.74
+	# logX['co'] = -2
+	logX['co2'] = -1.7
+	# logX['nh3'] = -3.0
 
 	# We'll also need to know the mean molecular weights of each molecule (here in units of amu)
 	mmw = dict()
 	mmw['h2o'] = 18.0
+	mmw['ch4'] = 16.0
+	# mmw['co'] = 28.0
+	mmw['co2'] = 44.0
+	# mmw['nh3'] = 17.0
 	mmw['h2'] = 2.0
 	mmw['he'] = 4.0
 
@@ -83,7 +87,7 @@ while rowCount < len(planetaryParameters):
 	for mol in logX.keys():
 		mu += np.power(10.0,logX[mol])*mmw[mol]
 
-	#print("The mean molecular weight is:", mu)
+	print("The mean molecular weight is:", mu)
 
 
 
@@ -91,6 +95,21 @@ while rowCount < len(planetaryParameters):
 	lam_h2o = np.load('GivenResources/cross_section_files/Cross_section_files/h2o_lam.npy')*1e6 # convert to microns
 	P_h2o = np.power(10.0,np.load('GivenResources/cross_section_files/Cross_section_files/h2o_P.npy')) # already in Pa
 	T_h2o = np.load('GivenResources/cross_section_files/Cross_section_files/h2o_T.npy')
+
+	xsec_ch4 = np.load('GivenResources/cross_section_files/Cross_section_files/ch4_xsec.npy')
+	lam_ch4 = np.load('GivenResources/cross_section_files/Cross_section_files/ch4_lam.npy')*1e6 # convert to microns
+	P_ch4 = np.power(10.0,np.load('GivenResources/cross_section_files/Cross_section_files/ch4_P.npy')) # already in Pa
+	T_ch4 = np.load('GivenResources/cross_section_files/Cross_section_files/ch4_T.npy')
+
+	xsec_co = np.load('GivenResources/cross_section_files/Cross_section_files/co_xsec.npy')
+	lam_co = np.load('GivenResources/cross_section_files/Cross_section_files/co_lam.npy')*1e6 # convert to microns
+	P_co = np.power(10.0,np.load('GivenResources/cross_section_files/Cross_section_files/co_P.npy')) # already in Pa
+	T_co = np.load('GivenResources/cross_section_files/Cross_section_files/co_T.npy')
+
+	# xsec_co2 = np.load('GivenResources/cross_section_files/Cross_section_files/co2_xsec.npy')
+	# lam_co2 = np.load('GivenResources/cross_section_files/Cross_section_files/co2_lam.npy')*1e6 # convert to microns
+	# P_co2 = np.power(10.0,np.load('GivenResources/cross_section_files/Cross_section_files/co2_P.npy')) # already in Pa
+	# T_co2 = np.load('GivenResources/cross_section_files/Cross_section_files/co2_T.npy')
 
 	# H2-H2 and He-H2 molecule pairs cause absorption through a process called "collision-induced absorption". This data is wavelength- and temperature-dependent, but not pressure-dependent.
 	xsec_h2h2 = np.load('GivenResources/cross_section_files/Cross_section_files/h2_h2_xsec.npy')
