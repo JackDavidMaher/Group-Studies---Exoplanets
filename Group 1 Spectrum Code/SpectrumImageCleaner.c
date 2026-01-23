@@ -10,8 +10,13 @@
 #endif
 int main(void)
 {
+<<<<<<< HEAD
     const char *dirpath = "..";
     const char prefix[] = "TransmissionSpectrum";
+=======
+    // Directory containing spectrum images
+    const char *dirpath = "SpectrumPlots";
+>>>>>>> 1d70245 (Jack maher (#44))
     DIR *d = opendir(dirpath);
     if (!d)
     {
@@ -24,7 +29,12 @@ int main(void)
     int errors = 0;
     while ((ent = readdir(d)) != NULL)
     {
+<<<<<<< HEAD
         if (strncmp(ent->d_name, prefix, sizeof(prefix) - 1) != 0)
+=======
+        // skip current and parent directories
+        if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
+>>>>>>> 1d70245 (Jack maher (#44))
             continue;
 
         if (snprintf(fullpath, sizeof(fullpath), "%s/%s", dirpath, ent->d_name) >= (int)sizeof(fullpath))
@@ -42,6 +52,10 @@ int main(void)
             continue;
         }
 
+<<<<<<< HEAD
+=======
+        // skips deleting directories (allows for storing of permentant files if needed)
+>>>>>>> 1d70245 (Jack maher (#44))
         if (S_ISDIR(st.st_mode))
         {
             fprintf(stderr, "skipping directory: %s\n", fullpath);
