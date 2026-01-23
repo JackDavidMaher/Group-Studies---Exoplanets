@@ -8,6 +8,8 @@ import os
 import subprocess
 import shutil
 import sys
+
+# This section runs the SpectrumImaceCleaner to remove any existing spectrums from the computer so dupliucates are not created
 script_dir = os.path.dirname(os.path.abspath(__file__))
 c_src = os.path.join(script_dir, 'SpectrumImageCleaner.c')
 bin_path = os.path.join(script_dir, 'SpectrumImageCleaner')
