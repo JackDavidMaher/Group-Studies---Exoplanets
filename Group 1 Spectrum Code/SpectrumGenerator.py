@@ -170,3 +170,5 @@ while rowCount < len(planetaryParameters):
 	#plt.xlim([1.1,1.7])
 	plt.savefig(f'TransmissionSpectrum{PName}.png')
 	plt.clf()
+
+
