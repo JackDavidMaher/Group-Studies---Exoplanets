@@ -10,6 +10,7 @@
 #endif
 int main(void)
 {
+    // Directory containing spectrum images
     const char *dirpath = "SpectrumPlots";
     DIR *d = opendir(dirpath);
     if (!d)
@@ -23,7 +24,7 @@ int main(void)
     int errors = 0;
     while ((ent = readdir(d)) != NULL)
     {
-        /* skip current/parent directories */
+        // skip current and parent directories
         if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
             continue;
 
@@ -42,7 +43,7 @@ int main(void)
             continue;
         }
 
-        /* skip directories; remove everything else (regular files, symlinks, etc.) */
+        // skips deleting directories (allows for storing of permentant files if needed)
         if (S_ISDIR(st.st_mode))
         {
             fprintf(stderr, "skipping directory: %s\n", fullpath);
