@@ -8,6 +8,8 @@ import os
 import subprocess
 import shutil
 import sys
+
+# This section runs the SpectrumImageCleaner to remove any existing spectrums from the computer so dupliucates are not created
 script_dir = os.path.dirname(os.path.abspath(__file__))
 c_src = os.path.join(script_dir, 'SpectrumImageCleaner.c')
 bin_path = os.path.join(script_dir, 'SpectrumImageCleaner')
@@ -35,9 +37,7 @@ with open("Group 1 Spectrum Code/PlanetaryParameters.csv", newline="") as Planet
 	data = []
 	planetNames = []
 	for row in reader:
-		# strip whitespace from each item
 		row = [item.strip() for item in row]
-		# assume the last column is the planet name (non-numeric)
 		if len(row) == 0:
 			continue
 		*nums, name = row
