@@ -4,15 +4,47 @@ from scipy.interpolate import RegularGridInterpolator
 import astropy.constants as const
 import matplotlib.pyplot as plt
 import csv
+import os
+import subprocess
+import shutil
+import sys
+
+# This section runs the SpectrumImageCleaner to remove any existing spectrums from the computer so dupliucates are not created
+script_dir = os.path.dirname(os.path.abspath(__file__))
+c_src = os.path.join(script_dir, 'SpectrumImageCleaner.c')
+bin_path = os.path.join(script_dir, 'SpectrumImageCleaner')
+if not os.path.isfile(bin_path) or not os.access(bin_path, os.X_OK):
+	if not os.path.isfile(c_src):
+		sys.exit(f"SpectrumImageCleaner binary not found and source {c_src} missing.")
+	gcc = shutil.which('gcc')
+	if gcc is None:
+		sys.exit("gcc not found; cannot compile SpectrumImageCleaner.c")
+	compile_proc = subprocess.run([gcc, '-O2', '-o', bin_path, c_src], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+	if compile_proc.returncode != 0:
+		sys.exit(f"Failed to compile SpectrumImageCleaner.c:\n{compile_proc.stderr}")
+run_proc = subprocess.run([bin_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=script_dir)
+if run_proc.returncode != 0:
+	sys.exit(f"SpectrumImageCleaner failed:\n{run_proc.stderr}")
+else:
+	if run_proc.stdout:
+		print(run_proc.stdout)
+
+
 
 with open("Group 1 Spectrum Code/PlanetaryParameters.csv", newline="") as PlanetaryParametersFile:
 	reader = csv.reader(PlanetaryParametersFile)
 	header = next(reader)
 	data = []
+	planetNames = []
 	for row in reader:
-		conv = [float(item.strip()) if item.strip() != "" else np.nan for item in row]
+		row = [item.strip() for item in row]
+		if len(row) == 0:
+			continue
+		*nums, name = row
+		conv = [float(item) if item != "" else np.nan for item in nums]
 		data.append(conv)
-planetaryParameters = np.array(data, dtype=float)
+		planetNames.append(name)
+	planetaryParameters = np.array(data, dtype=float)
 
 rowCount=0
 while rowCount < len(planetaryParameters):
@@ -23,7 +55,7 @@ while rowCount < len(planetaryParameters):
 	Pcloud = planetaryParameters[rowCount][4]  # Pressure at top of cloud deck in bar
 	Pref = planetaryParameters[rowCount][5]   # Reference pressure in bar
 	Rs = planetaryParameters[rowCount][6]  # Stellar radius in units of Solar radii     
-	PName = planetaryParameters[rowCount][7]  # Planet name (string)   
+	PName = planetNames[rowCount]  # Planet name (string)   
 	Rp *= const.R_earth.value   # Convert Rp from units of R_Earth to m
 	Rs *= const.R_sun.value     # Convert Rs from units of R_Sun to m
 	Pcloud *= 1.0e5             # Convert Pcloud from bar to Pa
@@ -168,5 +200,18 @@ while rowCount < len(planetaryParameters):
 	plt.ylabel('Transit Depth (ppm)')
 	plt.title(f'Transmission Spectrum of {PName}')
 	#plt.xlim([1.1,1.7])
-	plt.savefig(f'TransmissionSpectrum{PName}.png')
+
+	# Ensure output directory exists and save CSV for the plotted spectrum
+	plots_dir = os.path.join(script_dir, 'SpectrumPlots')
+	os.makedirs(plots_dir, exist_ok=True)
+	safe_name = PName.replace(' ', '_').replace('/', '_')
+	csv_path = os.path.join(plots_dir, f'TransmissionSpectrum_{safe_name}.csv')
+	with open(csv_path, 'w', newline='') as csvfile:
+		writer = csv.writer(csvfile)
+		writer.writerow(['wavelength_micron', 'transit_depth_ppm'])
+		for w, td in zip(lam, transit_depth*1e6):
+			writer.writerow([f"{w:.6e}", f"{td:.12e}"])
+
+	# Save the plot into the same output directory
+	plt.savefig(os.path.join(plots_dir, f'TransmissionSpectrum_{safe_name}.png'))
 	plt.clf()
