@@ -215,3 +215,4 @@ while rowCount < len(planetaryParameters):
 	# Save the plot into the same output directory
 	plt.savefig(os.path.join(plots_dir, f'TransmissionSpectrum_{safe_name}.png'))
 	plt.clf()
+	print(f"Saved transmission spectrum for {PName} to {plots_dir}")
