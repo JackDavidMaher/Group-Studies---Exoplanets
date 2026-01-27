@@ -85,15 +85,18 @@ while rowCount < len(planetaryParameters):
 		r[i] = r[i+1] - ( sc.k * 0.5 * (T[i+1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i+1])
 	# First, set up a dictionary which will contain all the log mixing ratios, and input the abundances of all molecules except H2 and He
 	logX = dict()
-	logX['h2o'] = 0
-	#logX['ch4'] = -3.0
-	#logX['co'] = -3.0
-	#logX['co2'] = -3.0
+	logX['h2o'] = -1.1 #fixed compositions
+	logX['ch4'] = -1.74
+	logX['co'] = -2.0
+	logX['co2'] = -1.7
 	#logX['nh3'] = -3.0
 
 	# We'll also need to know the mean molecular weights of each molecule (here in units of amu)
 	mmw = dict()
 	mmw['h2o'] = 18.0
+	mmw['ch4'] = 16.0
+	mmw['co'] = 28.0
+	mmw['co2'] = 44.0
 	mmw['h2'] = 2.0
 	mmw['he'] = 4.0
 
@@ -117,12 +120,20 @@ while rowCount < len(planetaryParameters):
 
 	#print("The mean molecular weight is:", mu)
 
+	xsec_dict = dict()
+	lam_dict = dict()
+	P_dict = dict()
+	T_dict = dict()
 
+	for mol in mmw.keys():
+		if mol =='h2':
+			break
+		else:
+			xsec_dict[mol] = np.load(f'GivenResources/cross_section_files/Cross_section_files/{mol}_xsec.npy') #cross-section
+			lam_dict[mol] = np.load(f'GivenResources/cross_section_files/Cross_section_files/{mol}_lam.npy')*1e6 # convert to microns, wavelength
+			P_dict[mol] = np.power(10.0,np.load(f'GivenResources/cross_section_files/Cross_section_files/{mol}_P.npy')) # already in Pa, pressure
+			T_dict[mol] = np.load(f'GivenResources/cross_section_files/Cross_section_files/{mol}_T.npy') # temperature
 
-	xsec_h2o = np.load('GivenResources/cross_section_files/Cross_section_files/h2o_xsec.npy')
-	lam_h2o = np.load('GivenResources/cross_section_files/Cross_section_files/h2o_lam.npy')*1e6 # convert to microns
-	P_h2o = np.power(10.0,np.load('GivenResources/cross_section_files/Cross_section_files/h2o_P.npy')) # already in Pa
-	T_h2o = np.load('GivenResources/cross_section_files/Cross_section_files/h2o_T.npy')
 
 	# H2-H2 and He-H2 molecule pairs cause absorption through a process called "collision-induced absorption". This data is wavelength- and temperature-dependent, but not pressure-dependent.
 	xsec_h2h2 = np.load('GivenResources/cross_section_files/Cross_section_files/h2_h2_xsec.npy')
@@ -134,14 +145,18 @@ while rowCount < len(planetaryParameters):
 	lam = np.linspace(0.61,5.0,200)
 
 	log_xsec_dict = dict()
-	interp_xsec = RegularGridInterpolator((lam_h2o, P_h2o, T_h2o), xsec_h2o, method='linear', bounds_error=False, fill_value=None)
-	lamlam, PP = np.meshgrid(lam, P, indexing="ij")
 
-	# Ensure requested temperature is inside the interpolator grid (avoid out-of-bounds)
-	T0 = np.clip(T[0], T_h2o.min(), T_h2o.max())
-	# Build points with shape (npoints, ndim) for the interpolator, then reshape back
-	pts = np.vstack((lamlam.ravel(), PP.ravel(), np.full(lamlam.size, T0))).T
-	log_xsec_dict['h2o'] = interp_xsec(pts).reshape(lamlam.shape)  # this assumes an isothermal atmosphere
+    #all molecules
+	for mol in logX.keys():
+		if mol =='h2':
+			break
+		interp_xsec = RegularGridInterpolator((lam_dict[mol], P_dict[mol], T_dict[mol]), xsec_dict[mol], method='linear', bounds_error=False, fill_value=None)
+		lamlam, PP = np.meshgrid(lam, P, indexing="ij")
+    	# Ensure requested temperature is inside the interpolator grid (avoid out-of-bounds)
+		T0 = np.clip(T[0], T_dict[mol].min(), T_dict[mol].max())
+		# Build points with shape (npoints, ndim) for the interpolator, then reshape back
+		pts = np.vstack((lamlam.ravel(), PP.ravel(), np.full(lamlam.size, T0))).T
+		log_xsec_dict[mol] = interp_xsec(pts).reshape(lamlam.shape)  # this assumes an isothermal atmosphere
 
 	log_cia_dict = dict()
 	log_cia_dict['h2h2'] = np.interp(lam, lam_h2h2, xsec_h2h2)
@@ -215,4 +230,3 @@ while rowCount < len(planetaryParameters):
 	# Save the plot into the same output directory
 	plt.savefig(os.path.join(plots_dir, f'TransmissionSpectrum_{safe_name}.png'))
 	plt.clf()
-	print(f"Saved transmission spectrum as {PName} to {plots_dir}")
