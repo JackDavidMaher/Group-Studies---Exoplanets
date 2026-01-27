@@ -1,7 +1,18 @@
 # use Group 1 Spectrum Code/SpectrumGenerator.py to read the csv file PandExoParametrers and update the parameters below accordingly
 
-import csv
 import os
+import warnings
+warnings.filterwarnings('ignore')
+
+import csv
+import pandexo.engine.justdoit as jdi 
+import pandexo.engine.justplotit as jpi 
+
+import numpy as np
+import pickle as pk
+import scipy.constants as sc
+from astropy import constants as const
+
 
 # This section reads the PandExoParameters.csv file and extracts parameters
 with open("Group 1 Spectrum Code/PandExoParameters.csv", newline="") as PandExoParametersFile:
@@ -20,22 +31,42 @@ with open("Group 1 Spectrum Code/PandExoParameters.csv", newline="") as PandExoP
 	PandExoParameters = np.array(data, dtype=float)
 
 rowCount=0
-while rowCount < len(PandExoParameters):
-	Rp = PandExoParameters[rowCount][0]  # Planet radius in units of Earth radii
-	Mp = PandExoParameters[rowCount][1]  # Planet mass in units of Earth masses
-	Tp = PandExoParameters[rowCount][2]  # Planet temperature in K
-	mu = PandExoParameters[rowCount][3]  # Mean molecular weight in atomic mass units
-	Pcloud = PandExoParameters[rowCount][4]  # Pressure at top of cloud deck in bar
-	Pref = PandExoParameters[rowCount][5]   # Reference pressure in bar
-	Rs = PandExoParameters[rowCount][6]  # Stellar radius in units of Solar radii     
+while rowCount < len(PandExoParameters):    
 	PName = planetNames[rowCount]  # Planet name (string)   
-	Rp *= const.R_earth.value   # Convert Rp from units of R_Earth to m
-	Rs *= const.R_sun.value     # Convert Rs from units of R_Sun to m
-	Pcloud *= 1.0e5             # Convert Pcloud from bar to Pa
-	Pref *= 1.0e5               # Convert Pref from bar to Pa
-	mu *= sc.u                  # Convert mu from atomic mass units to kg
-	#print(f"Processing planet with {header[0]}={Rp}, {header[1]}={Mp}, {header[2]}={Tp}, {header[3]}={mu}, {header[4]}={Pcloud}, {header[5]}={Pref}, {header[6]}={Rs}")
-	#print(rowCount,len(PandExoParameters))
 	rowCount=rowCount+1
 
+	exo_dict = jdi.load_exo_dict()
+    ## star dict
+	exo_dict['star']['type'] = 'phoenix'      
+	exo_dict['star']['temp'] = PandExoParameters[rowCount][]          ## Temperature in K 
+	exo_dict['star']['metal'] = PandExoParameters[rowCount][]         ## Metallacity as log Fe/H
+	exo_dict['star']['logg'] =  PandExoParameters[rowCount][]         ## log gravity cgs
+	exo_dict['star']['mag'] = PandExoParameters[rowCount][]           ## Star magnitude
+	if PandExoParameters[rowCount][] == J:                            ## if loop for the correct magnitude system
+		exo_dict['star']['ref_wave'] = 1.25 
+	elif PandExoParameters[rowCount][] == K:
+		exo_dict['star']['ref_wave'] = 2.22
+	else:
+		exo_dict['star']['ref_wave'] = 1.60
+	exo_dict['star']['radius'] = PandExoParameters[rowCount][]        ##radius of the star in solar radii
+	exo_dict['star']['r_unit'] = 'R_sun'
 
+    ## planet dict
+	exo_dict['planet']['radius'] = PandExoParameters[rowCount][]     ##radius of the planet in earth radii        
+	exo_dict['planet']['r_unit'] = 'R_earth'     ## or R_earth
+	exo_dict['planet']['transit_duration'] = PandExoParameters[rowCount][]  ##transit duration in days
+	exo_dict['planet']['td_unit'] = 'd'
+	exo_dict['planet']['type'] = 'user'            ## 'user' for user defined spectrum
+	exo_dict['planet']['exopath'] = f'{}.txt'              ## path to user defined spectrum file
+	exo_dict['planet']['f_unit'] = 'rp^2/r*^2'.     ## flux unit for user defined spectrum
+	exo_dict['planet']['w_unit'] = 'um'             ## wavelength unit for user defined spectra
+
+	exo_dict['observation']['baseline'] = 1.0 
+	exo_dict['observation']['baseline_unit'] = 'frac'
+	exo_dict['observation']['noccultations'] = PandExoParameters[rowCount][]  ## number of transits 
+	exo_dict['observation']['sat_level'] = 100            #saturation level in percent of full well 
+	exo_dict['observation']['sat_unit'] = '%' 
+	exo_dict['observation']['noise_floor'] = 0
+
+	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395M'], save_file=True, output_file=f'{PName}.p')
+	
