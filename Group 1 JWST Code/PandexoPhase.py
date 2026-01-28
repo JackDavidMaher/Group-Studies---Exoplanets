@@ -15,7 +15,7 @@ from astropy import constants as const
 
 
 # This section reads the PandExoParameters.csv file and extracts parameters
-with open("Group 1 Spectrum Code/PandExoParameters.csv", newline="") as PandExoParametersFile:
+with open("Group 1 JWST Code/PandExoParameters.csv", newline="") as PandExoParametersFile:
 	reader = csv.reader(PandExoParametersFile)
 	header = next(reader)
 	data = []
