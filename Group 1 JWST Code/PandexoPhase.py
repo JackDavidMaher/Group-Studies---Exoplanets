@@ -10,7 +10,25 @@ import pandexo.engine.justplotit as jpi
 
 import numpy as np
 
-
+# This section runs the SpectrumImageCleaner to remove any existing spectrums from the computer so dupliucates are not created
+script_dir = os.path.dirname(os.path.abspath(__file__))
+c_src = os.path.join(script_dir, 'SpectrumImageCleaner.c')
+bin_path = os.path.join(script_dir, 'SpectrumImageCleaner')
+if not os.path.isfile(bin_path) or not os.access(bin_path, os.X_OK):
+	if not os.path.isfile(c_src):
+		sys.exit(f"SpectrumImageCleaner binary not found and source {c_src} missing.")
+	gcc = shutil.which('gcc')
+	if gcc is None:
+		sys.exit("gcc not found; cannot compile SpectrumImageCleaner.c")
+	compile_proc = subprocess.run([gcc, '-O2', '-o', bin_path, c_src], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+	if compile_proc.returncode != 0:
+		sys.exit(f"Failed to compile SpectrumImageCleaner.c:\n{compile_proc.stderr}")
+run_proc = subprocess.run([bin_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=script_dir)
+if run_proc.returncode != 0:
+	sys.exit(f"SpectrumImageCleaner failed:\n{run_proc.stderr}")
+else:
+	if run_proc.stdout:
+		print(run_proc.stdout)
 
 # This section reads the PandExoParameters.csv file and extracts parameters
 with open("Group 1 JWST Code/PandExoParameters.csv", newline="") as PandExoParametersFile:
