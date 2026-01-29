@@ -19,14 +19,32 @@ with open("Group 1 JWST Code/PandExoParameters.csv", newline="") as PandExoParam
 	data = []
 	planetNames = []
 	for row in reader:
-		row = [item.strip() for item in row]
-		if len(row) == 0:
-			continue
-		*nums, name = row
-		conv = [float(item) if item != "" else np.nan for item in nums]
-		data.append(conv)
-		planetNames.append(name)
-	PandExoParameters = np.array(data, dtype=float)
+
+        cleaned = {}
+
+        for key, value in row.items():
+            value = value.strip()
+
+            if value == "":
+                cleaned[key] = np.nan
+            else:
+                try:
+                    cleaned[key] = float(value)
+                except ValueError:
+                    cleaned[key] = value.strip("'")  # keep strings clean
+
+        PandExoParameters.append(cleaned)
+        planetNames.append(cleaned["Planet Name"])
+#		row = [item.strip() for item in row]
+#		if len(row) == 0:
+#			continue
+#		name, *nums = row
+#		conv = [float(item) if item != "" else np.nan for item in nums]
+#		data.append(conv)
+#		planetNames.append(name)
+#	PandExoParameters = np.array(data, dtype=float)
+
+
 
 rowCount=0
 while rowCount < len(PandExoParameters):    

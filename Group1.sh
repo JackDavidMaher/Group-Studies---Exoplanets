@@ -16,6 +16,6 @@ echo
 echo "Running all Python scripts in subdirectories..."
 echo "------------------------------------------------"
 
-source ~/pandexo-venv/bin/python
+source ~/pandexo-venv/bin/activate
 python3 "Group 1 Spectrum Code/SpectrumGenerator.py"
 python3 "Group 1 JWST Code/PandexoPhase.py"
