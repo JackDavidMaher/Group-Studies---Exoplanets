@@ -52,7 +52,7 @@ while rowCount < len(PandExoParameters):
 	exo_dict['planet']['transit_duration'] = PandExoParameters[rowCount][19]  ##transit duration in days
 	exo_dict['planet']['td_unit'] = PandExoParameters[rowCount][20]
 	exo_dict['planet']['type'] = PandExoParameters[rowCount][16]            ## 'user' for user defined spectrum
-	exo_dict['planet']['exopath'] = f'{}.txt'              ## path to user defined spectrum file
+	exo_dict['planet']['exopath'] = f'Group 1 Spectrum Code/SpectrumPlots/TransmissionSpectrumTest{PName}.csv'              ## path to user defined spectrum file
 	exo_dict['planet']['f_unit'] = PandExoParameters[rowCount][21]     ## flux unit for user defined spectrum
 	exo_dict['planet']['w_unit'] = 'um'             ## wavelength unit for user defined spectra
 
@@ -63,5 +63,5 @@ while rowCount < len(PandExoParameters):
 	exo_dict['observation']['sat_unit'] = PandExoParameters[rowCount][2] 
 	exo_dict['observation']['noise_floor'] = PandExoParameters[rowCount][7]
 
-	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395M'], save_file=True, output_file=f'{PName}.p')
+	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395M'], save_file=True, output_file=f'JWSTSpectrum{PName}.csv')
 	
