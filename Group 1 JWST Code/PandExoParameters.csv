@@ -1,3 +1,4 @@
 Observation Noccultations,Star Mag,Star ref_wave,Star Temp,Star Metal,Star Logg,Star Radius,Planet Radius,Planet Transit_duriation,Planet Name
 1,9.75,1.25,3101,0.24,5.0286,0.2162,2.733,0.86966,GJ1214b
-1,11.389,1.25,3230,-0.53,5.016,0.234,4.60,2.900,TOI6438b
+1,11.389,1.25,3230,-0.53,5.016,0.234,4.60,2
+.900,TOI6438b
