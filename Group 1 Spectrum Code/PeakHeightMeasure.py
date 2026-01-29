@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.signal import savgol_filter
+import matplotlib.pyplot as plt
 
 def measure_band_feature(
     lam_um, depth_ppm,
@@ -84,9 +85,14 @@ depth_ppm = depth_frac * 1e6
 # Measure the ~3.3 µm CH4 feature (adjust windows for your case)
 result = measure_band_feature(
     lam_um, depth_ppm,
-    band=(3.1, 3.7),
-    sidebands=((2.9, 3.1), (3.85, 3.95)),
+    band=(2.9, 3.9),
+    sidebands=((2.75, 2.85), (3.95, 4.05)),
     smooth=True
 )
 
 print(result)
+
+plt.plot(lam_um, depth_ppm, label='Data')
+plt.plot(lam_um, savgol_filter(depth_ppm, 21, 3), label='Smoothed', alpha=0.7)
+# plt.plot(lam_um, y_s, label='Fitted Continuum', linestyle='--')
+plt.show()
