@@ -53,31 +53,31 @@ while rowCount < len(PandExoParameters):
 
 	exo_dict = jdi.load_exo_dict()
     ## star dict
-	exo_dict['star']['type'] = PandExoParameters[rowCount][8]      
-	exo_dict['star']['temp'] = PandExoParameters[rowCount][11]          ## Temperature in K 
-	exo_dict['star']['metal'] = PandExoParameters[rowCount][12]         ## Metallacity as log Fe/H
-	exo_dict['star']['logg'] =  PandExoParameters[rowCount][13]         ## log gravity cgs
-	exo_dict['star']['mag'] = PandExoParameters[rowCount][9]           ## Star magnitude
-	exo_dict['star']['ref_wave'] = PandExoParameters[rowCount][10]
-	exo_dict['star']['radius'] = PandExoParameters[rowCount][14]        ##radius of the star in solar radii
-	exo_dict['star']['r_unit'] = PandExoParameters[rowCount][15]
+	exo_dict['star']['type'] = 'phoenix'     
+	exo_dict['star']['temp'] = PandExoParameters[rowCount][3]          ## Temperature in K 
+	exo_dict['star']['metal'] = PandExoParameters[rowCount][4]         ## Metallacity as log Fe/H
+	exo_dict['star']['logg'] =  PandExoParameters[rowCount][5]         ## log gravity cgs
+	exo_dict['star']['mag'] = PandExoParameters[rowCount][1]           ## Star magnitude
+	exo_dict['star']['ref_wave'] = PandExoParameters[rowCount][2]
+	exo_dict['star']['radius'] = PandExoParameters[rowCount][6]        ##radius of the star in solar radii
+	exo_dict['star']['r_unit'] = 'R_sun'
 
     ## planet dict
-	exo_dict['planet']['radius'] = PandExoParameters[rowCount][17]     ##radius of the planet in earth radii        
-	exo_dict['planet']['r_unit'] = PandExoParameters[rowCount][18]     ## or R_earth
-	exo_dict['planet']['transit_duration'] = PandExoParameters[rowCount][19]  ##transit duration in days
-	exo_dict['planet']['td_unit'] = PandExoParameters[rowCount][20]
-	exo_dict['planet']['type'] = PandExoParameters[rowCount][16]            ## 'user' for user defined spectrum
+	exo_dict['planet']['radius'] = PandExoParameters[rowCount][7]     ##radius of the planet in earth radii        
+	exo_dict['planet']['r_unit'] = 'R_earth'     ## or R_jup
+	exo_dict['planet']['transit_duration'] = PandExoParameters[rowCount][8]  ##transit duration in days
+	exo_dict['planet']['td_unit'] = 'h'
+	exo_dict['planet']['type'] = 'user'           ## 'user' for user defined spectrum or 'constant'
 	exo_dict['planet']['exopath'] = f'Group 1 Spectrum Code/SpectrumPlots/TransmissionSpectrumTest{PName}.csv'              ## path to user defined spectrum file
-	exo_dict['planet']['f_unit'] = PandExoParameters[rowCount][21]     ## flux unit for user defined spectrum
+	exo_dict['planet']['f_unit'] = 'rp^2/r*^2'    ## flux unit for user defined spectrum
 	exo_dict['planet']['w_unit'] = 'um'             ## wavelength unit for user defined spectra
 
-	exo_dict['observation']['baseline'] = PandExoParameters[rowCount][5]
-	exo_dict['observation']['baseline_unit'] = PandExoParameters[rowCount][6]
-	exo_dict['observation']['noccultations'] = PandExoParameters[rowCount][3]  ## number of transits 
-	exo_dict['observation']['sat_level'] = PandExoParameters[rowCount][1]            #saturation level in percent of full well 
-	exo_dict['observation']['sat_unit'] = PandExoParameters[rowCount][2] 
-	exo_dict['observation']['noise_floor'] = PandExoParameters[rowCount][7]
+	exo_dict['observation']['baseline'] = 1.0 
+	exo_dict['observation']['baseline_unit'] = 'frac'
+	exo_dict['observation']['noccultations'] = PandExoParameters[rowCount][0]         ## number of transits (changed to match num_tran=10 in plot)
+	exo_dict['observation']['sat_level'] = 100    #saturation level in percent of full well 
+	exo_dict['observation']['sat_unit'] = '%' 
+	exo_dict['observation']['noise_floor'] = 0
 
 	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395M'], save_file=True, output_file=f'JWSTSpectrum{PName}.csv')
 	jpi.jwst_1d_spec(result, model=False, title=f'JWST Plot of {PName}', x_range=[1.6, 5.0])
