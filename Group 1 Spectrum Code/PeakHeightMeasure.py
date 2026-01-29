@@ -3,8 +3,8 @@ from scipy.signal import savgol_filter
 
 def measure_band_feature(
     lam_um, depth_ppm,
-    band=(3.15, 3.55),          # methane ~3.3 µm band window (edit as needed)
-    sidebands=((2.95, 3.10), (3.60, 3.75)),  # continuum windows either side
+    band=(2.7, 3.7),          # methane ~3.3 µm band window (edit as needed)
+    sidebands=((2.9, 3.1), (3.85, 3.95)),  # continuum windows either side
     smooth=True,
     sg_window=21, sg_poly=3
 ):
@@ -84,8 +84,8 @@ depth_ppm = depth_frac * 1e6
 # Measure the ~3.3 µm CH4 feature (adjust windows for your case)
 result = measure_band_feature(
     lam_um, depth_ppm,
-    band=(3.15, 3.55),
-    sidebands=((2.95, 3.10), (3.60, 3.75)),
+    band=(3.1, 3.7),
+    sidebands=((2.9, 3.1), (3.85, 3.95)),
     smooth=True
 )
 
