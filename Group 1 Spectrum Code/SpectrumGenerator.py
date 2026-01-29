@@ -220,7 +220,7 @@ while rowCount < len(planetaryParameters):
 	plots_dir = os.path.join(script_dir, 'SpectrumPlots')
 	os.makedirs(plots_dir, exist_ok=True)
 	safe_name = PName.replace(' ', '_').replace('/', '_')
-	csv_path = os.path.join(plots_dir, f'TransmissionSpectrum_{safe_name}.csv')
+	csv_path = os.path.join(plots_dir, f'TransmissionSpectrum{safe_name}.csv')
 	with open(csv_path, 'w', newline='') as csvfile:
 		writer = csv.writer(csvfile)
 		writer.writerow(['wavelength_micron', 'transit_depth_ppm'])
@@ -228,5 +228,5 @@ while rowCount < len(planetaryParameters):
 			writer.writerow([f"{w:.6e}", f"{td:.12e}"])
 
 	# Save the plot into the same output directory
-	plt.savefig(os.path.join(plots_dir, f'TransmissionSpectrum_{safe_name}.png'))
+	plt.savefig(os.path.join(plots_dir, f'TransmissionSpectrum{safe_name}.png'))
 	plt.clf()
