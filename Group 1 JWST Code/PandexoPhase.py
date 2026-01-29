@@ -65,3 +65,65 @@ while rowCount < len(PandExoParameters):
 
 	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395M'], save_file=True, output_file=f'JWSTSpectrum{PName}.csv')
 	
+    
+        clean_row = {
+            k.strip(): v.strip() if v is not None else "" 
+            for k, v in row.items()
+            }
+        planet_parameters.append(clean_row)
+
+# Helper function to convert strings to floats, handling empty strings
+def to_float(x):
+    return float(x) if x != "" else np.nan
+
+# Example of accessing parameters for each planet
+for p in planet_parameters:
+    planet_name = p["Planet Name"]
+
+    try:
+        Rp = (
+            to_float(p["Planet Radius"]) * 
+            radius_units[p["Planet R_unit"]]
+            )
+    except KeyError:
+         raise ValueError(
+              f'{planet_name}: Unrecognized planet radius unit "{p["Planet R_unit"]}"'
+         )
+    Rp_m = Rp.to(u.m).value
+
+    try:
+        Td = (
+            to_float(p["Planet Transit_duration"]) 
+            * time_units[p["Planet Td_unit"]]
+            )
+    except KeyError:
+        raise ValueError(
+            f'{planet_name}: Unrecognized transit duration unit "{p["Planet Td_unit"]}"'
+        )
+    Td_s = Td.to(u.s).value
+
+# TESTING BELOW TO VERIFY CORRECT READING OF PARAMETERS
+
+# Test 1: Correct number of planets
+print("Number of planets read:", len(planet_parameters))
+
+# Test 2: Print planet names
+print("\nPlanet names:")
+for p in planet_parameters:
+    print(" ", p["Planet Name"])
+
+# Test 3: Spot-check numeric parsing
+print("\nNumeric sanity checks:")
+for p in planet_parameters:
+    star_temp = float(p["Star Temp"])
+    planet_radius = float(p["Planet Radius"])
+    print(f" {p['Planet Name']}: T*={star_temp} K, Rp={planet_radius}")
+
+# Test 4: Check units survived
+print("\nUnit checks:")
+for p in planet_parameters:
+    print(
+        f" {p['Planet Name']}: "
+        f"Rp unit = {p['Planet R_unit']}, "
+        f"Transit unit = {p['Planet Td_unit']}"
+    )
