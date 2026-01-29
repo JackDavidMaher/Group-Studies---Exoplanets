@@ -42,9 +42,9 @@ while rowCount < len(PandExoParameters):
 	exo_dict['star']['metal'] = PandExoParameters[rowCount][]         ## Metallacity as log Fe/H
 	exo_dict['star']['logg'] =  PandExoParameters[rowCount][]         ## log gravity cgs
 	exo_dict['star']['mag'] = PandExoParameters[rowCount][]           ## Star magnitude
-	if PandExoParameters[rowCount][] == J:                            ## if loop for the correct magnitude system
+	if PandExoParameters[rowCount][] == 'J-band':                            ## if loop for the correct magnitude system
 		exo_dict['star']['ref_wave'] = 1.25 
-	elif PandExoParameters[rowCount][] == K:
+	elif PandExoParameters[rowCount][] == 'K-band':
 		exo_dict['star']['ref_wave'] = 2.22
 	else:
 		exo_dict['star']['ref_wave'] = 1.60
