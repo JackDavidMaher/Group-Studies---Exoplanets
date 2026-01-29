@@ -9,9 +9,7 @@ import pandexo.engine.justdoit as jdi
 import pandexo.engine.justplotit as jpi 
 
 import numpy as np
-import pickle as pk
-import scipy.constants as sc
-from astropy import constants as const
+
 
 
 # This section reads the PandExoParameters.csv file and extracts parameters
@@ -64,6 +62,7 @@ while rowCount < len(PandExoParameters):
 	exo_dict['observation']['noise_floor'] = PandExoParameters[rowCount][7]
 
 	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395M'], save_file=True, output_file=f'JWSTSpectrum{PName}.csv')
+	jpi.jwst_1d_spec(result, model=False, title=f'JWST Plot of {PName}', x_range=[1.6, 5.0])
 	
 '''
 	clean_row = {
