@@ -1,3 +1,74 @@
+# file produced with extra star gravity
+#
+# WHAT HAS BEEN DONE/FILTERED
+# kept only the columns needed for analysis and uncertainty calculations
+# removed planets with no measured mass, zero/invalid mass uncertainties, or flagged as mass limits
+# removed planets with no measured radius, zero/invalid radius uncertainties, or flagged as radius limits
+# removed planets where the host star has missing radius, mass, temperature, metallicity, or j-mag
+# removed planets flagged as controversial
+# removed planets where stellar temperature, radius, semi-major axis, or j-mag uncertainties are missing or zero
+#
+#^note: doing the line above takes out 70 planets almost all from sm axis Unc
+# which are all kepler planets so faint anyway so low TSM a lot of the 
+# existing values for sm axis come from KOI catalogue rather than confirmed planet catalogue
+#
+# computed average uncertainties for mass, radius, stellar temp, stellar radius, semi-major axis, and j-mag
+# computed planet surface gravity in cgs units
+# computed absolute error on planet gravity from mass and radius uncertainties
+# filtered planets to only those with radii between 1.5 and 4 earth radii (sub-neptunes)
+# computed equilibrium temperature (teq) assuming full heat redistribution and a bond albedo of 0.3
+# computed fractional uncertainties for teq based on stellar and orbital uncertainties
+# computed transmission spectroscopy metric (tsm) for each planet
+# computed fractional uncertainties for tsm based on planet, stellar, and teq uncertainties
+#
+# INDEXED COLUMNS
+#
+# COLUMN pl_name:             Planet Name
+# COLUMN pl_orbper:           Orbital Period [days]
+# COLUMN pl_orbsmax:          Orbit Semi-Major Axis [au]
+# COLUMN pl_bmasse:           Planet Mass or Mass*sin(i) [Earth Mass]
+# COLUMN pl_rade:             Planet Radius [Earth Radius]
+# COLUMN pl_radelim:          Planet Radius Limit Flag
+# COLUMN pl_radeerr1:         Planet Radius Upper Unc. [Earth Radius]
+# COLUMN pl_radeerr2:         Planet Radius Lower Unc. [Earth Radius]
+# COLUMN pl_trandep:          Transit Depth [%]
+# COLUMN pl_trandur:          Transit Duration [hours]
+# COLUMN pl_bmasselim:        Planet Mass or Mass*sin(i) Limit Flag
+# COLUMN pl_bmasseerr2:       Planet Mass or Mass*sin(i) Lower Unc. [Earth Mass]
+# COLUMN pl_bmasseerr1:       Planet Mass or Mass*sin(i) Upper Unc. [Earth Mass]
+# COLUMN pl_orbeccen:         Orbital Eccentricity
+# COLUMN pl_orbincl:          Orbital Inclination [deg]
+# COLUMN st_rad:              Stellar Radius [Solar Radius]
+# COLUMN st_mass:             Stellar Mass [Solar Mass]
+# COLUMN st_teff:             Stellar Effective Temperature [K]
+# COLUMN pl_ratror:           Ratio of Planet Radius to Stellar Radius
+# COLUMN st_met:              Stellar Metallicity [dex]
+# COLUMN st_metlim:           Stellar Metallicity Limit Flag
+# COLUMN sy_jmag:             J (2MASS) Magnitude
+# COLUMN discoverymethod:     Discovery Method
+# COLUMN pl_controv_flag:     Controversial Flag
+# COLUMN st_tefferr1:         Stellar Effective Temperature Upper Unc. [K]
+# COLUMN st_tefferr2:         Stellar Effective Temperature Lower Unc. [K]
+# COLUMN st_raderr1:          Stellar Radius Upper Unc. [Solar Radius]
+# COLUMN st_raderr2:          Stellar Radius Lower Unc. [Solar Radius]
+# COLUMN pl_orbsmaxerr1:      Orbit Semi-Major Axis Upper Unc. [au]
+# COLUMN pl_orbsmaxerr2:      Orbit Semi-Major Axis Lower Unc. [au]
+# COLUMN sy_jmagerr1:         J Magnitude Upper Unc.
+# COLUMN sy_jmagerr2:         J Magnitude Lower Unc.
+# COLUMN pl_bmasseerr_avg:    Planet Mass 1σ Average Error [Earth Mass]
+# COLUMN pl_radeerr_avg:      Planet Radius 1σ Average Error [Earth Radius]
+# COLUMN st_tefferr_avg:      Stellar Effective Temperature 1σ Average Error [K]
+# COLUMN st_raderr_avg:       Stellar Radius 1σ Average Error [Solar Radius]
+# COLUMN pl_orbsmaxerr_avg:   Orbit Semi-Major Axis 1σ Average Error [au]
+# COLUMN sy_jmagerr_avg:      J Magnitude 1σ Average Error
+# COLUMN g_planet_cgs:        Planet Surface Gravity [cm/s²]
+# COLUMN g_planet_cgs_err:    Planet Surface Gravity 1σ Error [cm/s²]
+# COLUMN pl_Teq:              Planet Equilibrium Temperature [K]
+# COLUMN pl_Teq_err:          Planet Equilibrium Temperature 1σ Error [K]
+# COLUMN pl_tsm:              Transmission Spectroscopy Metric (TSM)
+# COLUMN pl_tsm_err:          TSM 1σ Error
+# COLUMN st_logg:             Stellar Surface Gravity [log10(cm/s**2)]
+#
 pl_name,pl_orbper,pl_orbsmax,pl_bmasse,pl_rade,pl_radelim,pl_radeerr1,pl_radeerr2,pl_trandep,pl_trandur,pl_bmasselim,pl_bmasseerr2,pl_bmasseerr1,pl_orbeccen,pl_orbincl,st_rad,st_mass,st_teff,pl_ratror,st_met,st_metlim,sy_jmag,discoverymethod,pl_controv_flag,st_logg,st_tefferr1,st_tefferr2,st_raderr1,st_raderr2,pl_orbsmaxerr1,pl_orbsmaxerr2,sy_jmagerr1,sy_jmagerr2,pl_bmasseerr_avg,pl_radeerr_avg,st_tefferr_avg,st_raderr_avg,pl_orbsmaxerr_avg,sy_jmagerr_avg,g_planet_cgs,g_planet_cgs_err,pl_Teq,pl_Teq_err,pl_tsm,pl_tsm_err
 55 Cnc e,0.7365474,0.01544,7.99,1.875,0.0,0.029,-0.029,0.03846733,1.5439,0.0,-0.33,0.32,0.05,83.59,0.943,0.905,5172.0,0.0182,0.35,0.0,4.768,Radial Velocity,0.0,4.43,18.0,-18.0,0.01,-0.01,5e-05,-5e-05,0.244,-0.244,0.325,0.029,18.0,0.01,5e-05,0.244,2231.796271659669,114.04883943865846,1782.7838023411402,11.669768738086255,231.90113601680386,30.17059805290944
 AU Mic b,8.46308,0.0649,20.12,3.95677019,0.0,0.14571675,-0.14571675,0.2379,3.4927,0.0,-1.72,1.57,0.00577,89.57917,0.744,0.51,3678.0,0.0488,0.23,0.0,5.436,Transit,0.0,4.404,90.0,-88.0,0.023,-0.021,0.0012,-0.0012,0.017,-0.017,1.645,0.14571675,89.0,0.022,0.0012,0.017,1261.9920956294966,138.87405037572,549.2673818765147,16.38258000673468,319.9207525676641,48.874841358370695
