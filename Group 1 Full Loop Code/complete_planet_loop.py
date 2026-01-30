@@ -13,12 +13,9 @@ import pandexo.engine.justplotit as jpi
 import pandas as pd
 import os
 
-os.environ['pandeia_refdata'] = "/Users/sahil/Documents/Pandexo/pandeia"
-os.environ['PANDEXO_LIB'] = "/Users/sahil/Documents/Pandexo/grp/redcat/trds"
-os.environ['PYSYN_CDBS'] = "/Users/sahil/Documents/Pandexo/grp/redcat/trds"
 ## CHANGE PATH IF NEED BE ##
  
-with open("/Users/sahil/Group-Studies---Exoplanets/Data/selected_planets_full_table_withg_star_refined.csv", newline="") as PlanetaryParametersFile:   
+with open("/Users/sahil/Group-Studies---Exoplanets/Data/selected_planets_30.01_17-47.csv", newline="") as PlanetaryParametersFile:   
 	reader = csv.reader(PlanetaryParametersFile)
 	header = next(reader)
 	data = []
@@ -37,7 +34,7 @@ rowCount= 2
 while rowCount < len(planetaryParameters):
 	PName = planetNames[rowCount]                                   ## planet name   
 	print(f"---Analysing Planet: {PName} ----")
-	print(f"Star Manitude: {planetaryParameters[rowCount][20]}")
+	print(f"Star Magnitude: {planetaryParameters[rowCount][20]}")
 
     ## CHANGE INDEXES IF NEED BE ##
 	
@@ -206,7 +203,7 @@ while rowCount < len(planetaryParameters):
 	plt.ylabel('Transit Depth (ppm)')
 	plt.title(f'Transmission Spectrum of {PName}')
 	plt.xlim([2.5,5.0])
-	plt.show()
+	#plt.show()
 
 	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/spectrum plots/planet_spectrum_{PName}.png')
 	np.savetxt(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/spectrum txt files/planet_spectrum_{PName}.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
@@ -255,4 +252,4 @@ while rowCount < len(planetaryParameters):
 	df.to_csv(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/pandexo csv files/{PName}_JWST_results.csv', index=False)
 
 	print(f'---Finished analysing planet: {PName}---')
-	rowCount=rowCount+1
+	rowCount += 1
