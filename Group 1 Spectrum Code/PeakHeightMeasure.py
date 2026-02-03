@@ -253,12 +253,12 @@ while rowCount < len(planetaryParameters):
 	depth_data = loaded_spec[:, 1]
 
 	# 2. Find Left Trough (2.5-3.0 um)
-	left_mask = (lam_data >= 3.8) & (lam_data <= 4.0)
+	left_mask = (lam_data >= 4.0) & (lam_data <= 4.3)
 	left_val = np.min(depth_data[left_mask])
 	left_lam_target = lam_data[left_mask][np.argmin(depth_data[left_mask])]
 
 	# 3. Find Right Trough (3.6-4.2 um)
-	right_mask = (lam_data >= 4.7) & (lam_data <= 5.0)
+	right_mask = (lam_data >= 4.6) & (lam_data <= 4.8)
 	right_val = np.min(depth_data[right_mask])
 	right_lam_target = lam_data[right_mask][np.argmin(depth_data[right_mask])]
 
