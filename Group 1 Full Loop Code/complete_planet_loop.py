@@ -15,7 +15,7 @@ import os
 
 ## CHANGE PATH IF NEED BE ##
  
-with open("/Users/sahil/Group-Studies---Exoplanets/Data/selected_planets_30.01_17-47.csv", newline="") as PlanetaryParametersFile:   
+with open("/Users/sahil/Group-Studies---Exoplanets/Data/selected_planets_under_500K_03.02_14-42.csv", newline="") as PlanetaryParametersFile:   
 	reader = csv.reader(PlanetaryParametersFile)
 	header = next(reader)
 	data = []
@@ -250,13 +250,6 @@ while rowCount < len(planetaryParameters):
     'Transit_Depth_ppm': data['spectrum']*1e6,
     'Error_ppm': data['spectrum_w_rand']*1e6 })
 
-	plt.errorbar(data['wave'], data['spectrum']*1e6, yerr=data['spectrum_w_rand']*1e6, fmt='o', ecolor='r', capsize=2)
-	plt.xlabel('Wavelength (microns)')
-	plt.ylabel('Transit Depth (ppm)')
-	plt.title(f'JWST Simulated Observation of {PName}')
-	plt.xlim([2.5,5.0])
-	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/JWST plots/JWST_observation_{PName}.png')
-	plt.close()
 
 	df.to_csv(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/pandexo csv files/{PName}_JWST_results.csv', index=False)
 
