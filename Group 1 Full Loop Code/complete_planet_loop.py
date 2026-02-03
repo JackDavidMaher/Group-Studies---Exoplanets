@@ -1,4 +1,5 @@
 import os
+import wave
 import numpy as np
 import scipy.constants as sc
 from scipy.interpolate import RegularGridInterpolator
@@ -240,16 +241,28 @@ while rowCount < len(planetaryParameters):
 
 	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395H'] ,save_file=False)
 
-	spec_dict = jpi.jwst_1d_spec(result, R=100, model=False, title=f'JWST Plot of {PName}', x_range=[2.8, 5.0], plot=True)
+	spec_dict = jpi.jwst_1d_spec(result, R=500, model=True, title=f'JWST Plot of {PName}', x_range=[2.8, 5.0], plot=False)
 
-	inst_name  = list(result.keys())[2]
-	data = result[inst_name]
+	wavelength = result['FinalSpectrum']['wave']
+	observed_depth = result['FinalSpectrum']['spectrum_w_rand'] # Data + Noise
+	model_depth = result['FinalSpectrum']['spectrum']          # The smooth model
+	errors = result['FinalSpectrum']['error_w_floor']   # The 1-sigma uncertainties
 	
+	plt.errorbar(wavelength, observed_depth, yerr=errors, fmt='s', color='royalblue', 
+             markersize=1, alpha=0.1, label=f'{PName} Simulated Data')      
+	plt.ylim([min(model_depth)*0.9, max(model_depth)*1.1])
+	plt.xlabel('Wavelength ($\mu$m)', fontsize=8)
+	plt.ylabel('Transit Depth (ppm)', fontsize=8)
+	plt.title(f'PandExo Simulated Observation for {PName}', fontsize=10)
+	plt.xlim(2.8,5)
+	plt.legend(frameon=True)
+	plt.grid(True, alpha=0.3)
+	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/JWST plots/{PName}_JWST_simulated_observation.png')
+	plt.close()
 	df = pd.DataFrame({
-    'Wavelength_um': data['wave'],
-    'Transit_Depth_ppm': data['spectrum']*1e6,
-    'Error_ppm': data['spectrum_w_rand']*1e6 })
-
+    'Wavelength_um': wavelength,
+    'Transit_Depth_ppm': observed_depth * 1e6,
+    'Error_ppm': errors * 1e6 })
 
 	df.to_csv(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/pandexo csv files/{PName}_JWST_results.csv', index=False)
 
