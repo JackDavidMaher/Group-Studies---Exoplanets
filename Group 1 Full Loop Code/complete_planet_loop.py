@@ -30,7 +30,7 @@ with open("/Users/sahil/Group-Studies---Exoplanets/Data/selected_planets_30.01_1
 		planetNames.append(name)
 	planetaryParameters = np.array(data, dtype=float)
 	
-rowCount= 2
+rowCount= 0
 while rowCount < len(planetaryParameters):
 	PName = planetNames[rowCount]                                   ## planet name   
 	print(f"---Analysing Planet: {PName} ----")
@@ -197,15 +197,16 @@ while rowCount < len(planetaryParameters):
 	# Compute effective transit depth (transmission spectrum) #
 	transit_depth[:] = (Rp*Rp + 2.0*integral_gt_Rp[:] - 2.0*integral_lt_Rp[:])/(Rs*Rs)
 
-
+	plt.Figure(figsize=(12,8))
 	plt.plot(lam,transit_depth*1e6) #convert transit_depth into units of ppm
 	plt.xlabel('Wavelength (microns)')
 	plt.ylabel('Transit Depth (ppm)')
 	plt.title(f'Transmission Spectrum of {PName}')
 	plt.xlim([2.5,5.0])
-	#plt.show()
+
 
 	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/spectrum plots/planet_spectrum_{PName}.png')
+	plt.close()
 	np.savetxt(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/spectrum txt files/planet_spectrum_{PName}.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
 
 
@@ -248,6 +249,14 @@ while rowCount < len(planetaryParameters):
     'Wavelength_um': data['wave'],
     'Transit_Depth_ppm': data['spectrum']*1e6,
     'Error_ppm': data['spectrum_w_rand']*1e6 })
+
+	plt.errorbar(data['wave'], data['spectrum']*1e6, yerr=data['spectrum_w_rand']*1e6, fmt='o', ecolor='r', capsize=2)
+	plt.xlabel('Wavelength (microns)')
+	plt.ylabel('Transit Depth (ppm)')
+	plt.title(f'JWST Simulated Observation of {PName}')
+	plt.xlim([2.5,5.0])
+	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/JWST plots/JWST_observation_{PName}.png')
+	plt.close()
 
 	df.to_csv(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/pandexo csv files/{PName}_JWST_results.csv', index=False)
 
