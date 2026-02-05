@@ -1,5 +1,4 @@
 import os
-import wave
 import numpy as np
 import scipy.constants as sc
 from scipy.interpolate import RegularGridInterpolator
@@ -12,34 +11,12 @@ import pandexo.engine.justdoit as jdi # THIS IS THE HOLY GRAIL OF PANDEXO
 import numpy as np
 import pandexo.engine.justplotit as jpi 
 import pandas as pd
-import shutil
-import sys
-import subprocess
 
-
-# This section runs the SpectrumImageCleaner to remove any existing spectrums from the computer so dupliucates are not created
-script_dir = os.path.dirname(os.path.abspath(__file__))
-c_src = os.path.join(script_dir, 'SpectrumImageCleaner.c')
-bin_path = os.path.join(script_dir, 'SpectrumImageCleaner')
-if not os.path.isfile(bin_path) or not os.access(bin_path, os.X_OK):
-	if not os.path.isfile(c_src):
-		sys.exit(f"SpectrumImageCleaner binary not found and source {c_src} missing.")
-	gcc = shutil.which('gcc')
-	if gcc is None:
-		sys.exit("gcc not found; cannot compile SpectrumImageCleaner.c")
-	compile_proc = subprocess.run([gcc, '-O2', '-o', bin_path, c_src], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-	if compile_proc.returncode != 0:
-		sys.exit(f"Failed to compile SpectrumImageCleaner.c:\n{compile_proc.stderr}")
-run_proc = subprocess.run([bin_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=script_dir)
-if run_proc.returncode != 0:
-	sys.exit(f"SpectrumImageCleaner failed:\n{run_proc.stderr}")
-else:
-	if run_proc.stdout:
-		print(run_proc.stdout)
 
 ## CHANGE PATH IF NEED BE ##
- 
-with open("/Users/sahil/Group-Studies---Exoplanets/Data/40_planets_under_1000K05.02_15-55.csv", newline="") as PlanetaryParametersFile:   
+filedirectory = '165 planets data'
+
+with open("/Users/sahil/Group-Studies---Exoplanets/Code/All_165_valid_planets_under_1000K05.02_16-10.csv", newline="") as PlanetaryParametersFile:   
 	reader = csv.reader(PlanetaryParametersFile)
 	header = next(reader)
 	data = []
@@ -229,9 +206,9 @@ while rowCount < len(planetaryParameters):
 	plt.xlim([2.5,5.0])
 
 
-	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/spectrum plots/planet_spectrum_{PName}.png')
+	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/{filedirectory}/spectrum plots/planet_spectrum_{PName}.png')
 	plt.close()
-	np.savetxt(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/spectrum txt files/planet_spectrum_{PName}.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
+	np.savetxt(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{PName}.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
 
 
 	exo_dict = jdi.load_exo_dict()
@@ -251,7 +228,7 @@ while rowCount < len(planetaryParameters):
 	exo_dict['planet']['transit_duration'] = planetaryParameters[rowCount][8]    ##transit duration in days
 	exo_dict['planet']['td_unit'] = 'h'
 	exo_dict['planet']['type'] = 'user'                                          ## 'user' for user defined spectrum or 'constant' for constant spectrum
-	exo_dict['planet']['exopath'] = f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/spectrum txt files/planet_spectrum_{PName}.txt'       ## path to user defined spectrum file
+	exo_dict['planet']['exopath'] = f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/165 planets data/spectrum txt files/planet_spectrum_{PName}.txt'       ## path to user defined spectrum file
 	exo_dict['planet']['f_unit'] = 'rp^2/r*^2'                                   ## flux unit for user defined spectrum
 	exo_dict['planet']['w_unit'] = 'um'                                          ## wavelength unit for user defined spectra
 
@@ -280,14 +257,14 @@ while rowCount < len(planetaryParameters):
 	plt.xlim(2.8,5)
 	plt.legend(frameon=True)
 	plt.grid(True, alpha=0.3)
-	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/JWST plots/{PName}_JWST_simulated_observation.png')
+	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/{filedirectory}/JWST plots/{PName}_JWST_simulated_observation.png')
 	plt.close()
 	df = pd.DataFrame({
     'Wavelength_um': wavelength,
     'Transit_Depth_ppm': observed_depth * 1e6,
     'Error_ppm': errors * 1e6 })
 
-	df.to_csv(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/pandexo csv files/{PName}_JWST_results.csv', index=False)
+	df.to_csv(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{PName}_JWST_results.csv', index=False)
 
 	print(f'---Finished analysing planet: {PName}---')
 	rowCount += 1
