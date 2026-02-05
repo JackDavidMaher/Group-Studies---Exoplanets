@@ -39,7 +39,7 @@ else:
 
 ## CHANGE PATH IF NEED BE ##
  
-with open("/Users/sahil/Group-Studies---Exoplanets/Data/selected_planets_under_500K_03.02_14-42.csv", newline="") as PlanetaryParametersFile:   
+with open("/Users/sahil/Group-Studies---Exoplanets/Data/40_planets_under_1000K05.02_15-55.csv", newline="") as PlanetaryParametersFile:   
 	reader = csv.reader(PlanetaryParametersFile)
 	header = next(reader)
 	data = []
@@ -77,7 +77,7 @@ while rowCount < len(planetaryParameters):
 
 	
 
-	P = np.logspace(2.0,-5,100) * 1.0e5
+	P = np.logspace(2.0,-9,100) * 1.0e5
 	T = Tp*np.ones_like(P)
 	n = P/(sc.k*T)
 	rho = mu*n
