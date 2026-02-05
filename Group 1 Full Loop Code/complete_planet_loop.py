@@ -31,7 +31,7 @@ with open("/Users/sahil/Group-Studies---Exoplanets/Code/All_165_valid_planets_un
 		planetNames.append(name)
 	planetaryParameters = np.array(data, dtype=float)
 	
-rowCount= 0
+rowCount= 98
 while rowCount < len(planetaryParameters):
 	PName = planetNames[rowCount]                                   ## planet name   
 	print(f"---Analysing Planet: {PName} ----")
