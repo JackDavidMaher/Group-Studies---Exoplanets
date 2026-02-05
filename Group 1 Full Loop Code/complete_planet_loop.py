@@ -248,7 +248,7 @@ while rowCount < len(planetaryParameters):
 	model_depth = result['FinalSpectrum']['spectrum']          # The smooth model
 	errors = result['FinalSpectrum']['error_w_floor']   # The 1-sigma uncertainties
 	
-	plt.errorbar(wavelength, observed_depth, yerr=errors, fmt='s', color='royalblue', 
+	plt.errorbar(wavelength, model_depth, yerr=errors, fmt='s', color='royalblue', 
              markersize=1, alpha=0.1, label=f'{PName} Simulated Data')      
 	plt.ylim([min(model_depth)*0.9, max(model_depth)*1.1])
 	plt.xlabel('Wavelength ($\mu$m)', fontsize=8)
