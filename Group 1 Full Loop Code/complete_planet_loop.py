@@ -14,7 +14,7 @@ import pandas as pd
 
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '165 planets data'
+filedirectory = '165 planets data'   ##  name of folder just change number
 
 with open("/Users/sahil/Group-Studies---Exoplanets/Code/All_165_valid_planets_under_1000K05.02_16-10.csv", newline="") as PlanetaryParametersFile:   
 	reader = csv.reader(PlanetaryParametersFile)
@@ -31,7 +31,7 @@ with open("/Users/sahil/Group-Studies---Exoplanets/Code/All_165_valid_planets_un
 		planetNames.append(name)
 	planetaryParameters = np.array(data, dtype=float)
 	
-rowCount= 98
+rowCount= 0 
 while rowCount < len(planetaryParameters):
 	PName = planetNames[rowCount]                                   ## planet name   
 	print(f"---Analysing Planet: {PName} ----")
