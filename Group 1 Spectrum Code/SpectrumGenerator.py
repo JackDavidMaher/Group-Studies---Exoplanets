@@ -65,7 +65,7 @@ while rowCount < len(planetaryParameters):
 	#print(rowCount,len(planetaryParameters))
 	rowCount=rowCount+1
 
-	P = np.logspace(2.0,-5,100) * 1.0e5
+	P = np.logspace(2.0,-9,100) * 1.0e5
 	T = Tp*np.ones_like(P)
 	n = P/(sc.k*T)
 	#rho = mu*n
