@@ -12,7 +12,9 @@ import pandexo.engine.justdoit as jdi # THIS IS THE HOLY GRAIL OF PANDEXO
 import numpy as np
 import pandexo.engine.justplotit as jpi 
 import pandas as pd
-import os
+import shutil
+import sys
+import subprocess
 
 
 # This section runs the SpectrumImageCleaner to remove any existing spectrums from the computer so dupliucates are not created
