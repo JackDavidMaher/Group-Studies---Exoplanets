@@ -10,14 +10,16 @@
 #endif
 int main(void)
 {
+    const char *dirpaths[] = {"JWST Plots", "pandexo csv files", "spectrum plots", "spectrum txt files"};
+    int overall_errors = 0;
     for (int i = 0; i < 4; i++)
     {
-        char dirpath[] = {"JWST Plots", "pandexo csv files", "spectrum plots", "spectrum txt files"};
-        // Directory containing spectrum images
-        DIR *d = opendir(dirpath[i]);
+        const char *dirpath = dirpaths[i];
+        /* Directory containing spectrum images */
+        DIR *d = opendir(dirpath);
         if (!d)
         {
-            fprintf(stderr, "opendir(%s) failed: %s\n", dirpath[i], strerror(errno));
+            fprintf(stderr, "opendir(%s) failed: %s\n", dirpath, strerror(errno));
             return 1;
         }
 
@@ -63,6 +65,8 @@ int main(void)
         }
 
         closedir(d);
-        return errors ? 2 : 0;
+        if (errors)
+            overall_errors = 1;
     }
+    return overall_errors ? 2 : 0;
 }
