@@ -33,6 +33,43 @@ with open(f'{PROJECT_DIR}/Data/##.csv', newline="") as PlanetaryParametersFile: 
 		data.append(conv)
 		planetNames.append(name)
 	planetaryParameters = np.array(data, dtype=float)
+
+def bin_spectrum(wave, flux, error, bin_width=0.0225):
+    """
+    Bins spectrum using weighted averaging.
+    bin_width is in the same units as wave (microns).
+    """
+    # Create the bins
+    bins = np.arange(min(wave), max(wave), bin_width)
+    
+    binned_wave = []
+    binned_flux = []
+    binned_err = []
+
+    for i in range(len(bins) - 1):
+        # Find indices of points that fall into this bin
+        indices = np.where((wave >= bins[i]) & (wave < bins[i+1]))[0]
+        
+        if len(indices) > 0:
+            w = wave[indices]
+            f = flux[indices]
+            e = error[indices]
+            
+            # 1. Calculate Weights (1/sigma^2)
+            weights = 1.0 / (e**2)
+            
+            # 2. Weighted Average for Flux
+            weighted_f = np.sum(f * weights) / np.sum(weights)
+            
+            # 3. Propagated Error for the bin
+            # The formula is: 1 / sqrt(sum(1/sigma^2))
+            propagated_e = np.sqrt(1.0 / np.sum(weights))
+            
+            binned_wave.append(np.mean(w))
+            binned_flux.append(weighted_f)
+            binned_err.append(propagated_e)
+            
+    return np.array(binned_wave), np.array(binned_flux), np.array(binned_err)
 	
 rowCount= 0 
 while rowCount < len(planetaryParameters):
