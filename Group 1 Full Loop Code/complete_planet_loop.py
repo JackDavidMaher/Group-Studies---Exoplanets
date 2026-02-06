@@ -17,9 +17,9 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '165 planets data'   ##  name of folder just change number
+filedirectory = '## planets data'   ##  name of folder just change number
 
-with open(f'{PROJECT_DIR}/Code/All_165_valid_planets_under_1000K05.02_16-10.csv', newline="") as PlanetaryParametersFile:   
+with open(f'{PROJECT_DIR}/Data/##.csv', newline="") as PlanetaryParametersFile:   ## Add name of file
 	reader = csv.reader(PlanetaryParametersFile)
 	header = next(reader)
 	data = []
@@ -230,7 +230,7 @@ while rowCount < len(planetaryParameters):
 	exo_dict['planet']['transit_duration'] = planetaryParameters[rowCount][8]    ##transit duration in days
 	exo_dict['planet']['td_unit'] = 'h'
 	exo_dict['planet']['type'] = 'user'                                          ## 'user' for user defined spectrum or 'constant' for constant spectrum
-	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/165 planets data/spectrum txt files/planet_spectrum_{PName}.txt'       ## path to user defined spectrum file
+	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{PName}.txt'       ## path to user defined spectrum file
 	exo_dict['planet']['f_unit'] = 'rp^2/r*^2'                                   ## flux unit for user defined spectrum
 	exo_dict['planet']['w_unit'] = 'um'                                          ## wavelength unit for user defined spectra
 
@@ -266,7 +266,7 @@ while rowCount < len(planetaryParameters):
     'Transit_Depth_ppm': observed_depth * 1e6,
     'Error_ppm': errors * 1e6 })
 
-	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{PName}_JWST_results.csv', index=False)
+	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST results/{PName}_JWST_results.csv', index=False)
 
 	print(f'---Finished analysing planet: {PName}---')
 	rowCount += 1
