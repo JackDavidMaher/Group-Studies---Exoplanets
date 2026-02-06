@@ -16,7 +16,7 @@ import pandas as pd
 ## CHANGE PATH IF NEED BE ##
 filedirectory = '165 planets data'   ##  name of folder just change number
 
-with open("/Users/sahil/Group-Studies---Exoplanets/Code/All_165_valid_planets_under_1000K05.02_16-10.csv", newline="") as PlanetaryParametersFile:   
+with open("/Code/All_165_valid_planets_under_1000K05.02_16-10.csv", newline="") as PlanetaryParametersFile:   
 	reader = csv.reader(PlanetaryParametersFile)
 	header = next(reader)
 	data = []
@@ -118,18 +118,18 @@ while rowCount < len(planetaryParameters):
 		if mol =='h2':
 			break
 		else:
-			xsec_dict[mol] = np.load(f'/Users/sahil/Group-Studies---Exoplanets/GivenResources/cross_section_files/Cross_section_files/{mol}_xsec.npy') #cross-section
-			lam_dict[mol] = np.load(f'/Users/sahil/Group-Studies---Exoplanets/GivenResources/cross_section_files/Cross_section_files/{mol}_lam.npy')*1e6 # convert to microns, wavelength
-			P_dict[mol] = np.power(10.0,np.load(f'/Users/sahil/Group-Studies---Exoplanets/GivenResources/cross_section_files/Cross_section_files/{mol}_P.npy')) # already in Pa, pressure
-			T_dict[mol] = np.load(f'/Users/sahil/Group-Studies---Exoplanets/GivenResources/cross_section_files/Cross_section_files/{mol}_T.npy') # temperature
+			xsec_dict[mol] = np.load(f'/Group 1 Full Loop Code/GivenResources/cross_section_files/Cross_section_files/{mol}_xsec.npy') #cross-section
+			lam_dict[mol] = np.load(f'/Group 1 Full Loop Code/GivenResources/cross_section_files/Cross_section_files/{mol}_lam.npy')*1e6 # convert to microns, wavelength
+			P_dict[mol] = np.power(10.0,np.load(f'/Group 1 Full Loop Code/GivenResources/cross_section_files/Cross_section_files/{mol}_P.npy')) # already in Pa, pressure
+			T_dict[mol] = np.load(f'/Group 1 Full Loop Code/GivenResources/cross_section_files/Cross_section_files/{mol}_T.npy') # temperature
 
 
 	# H2-H2 and He-H2 molecule pairs cause absorption through a process called "collision-induced absorption". This data is wavelength- and temperature-dependent, but not pressure-dependent.
-	xsec_h2h2 = np.load('/Users/sahil/Group-Studies---Exoplanets/GivenResources/cross_section_files/Cross_section_files/h2_h2_xsec.npy')
-	lam_h2h2 = np.load('/Users/sahil/Group-Studies---Exoplanets/GivenResources/cross_section_files/Cross_section_files/h2_h2_lam.npy')
+	xsec_h2h2 = np.load('/Group 1 Full Loop Code/GivenResources/cross_section_files/Cross_section_files/h2_h2_xsec.npy')
+	lam_h2h2 = np.load('/Group 1 Full Loop Code/GivenResources/cross_section_files/Cross_section_files/h2_h2_lam.npy')
 
-	xsec_heh2 = np.load('/Users/sahil/Group-Studies---Exoplanets/GivenResources/cross_section_files/Cross_section_files/he_h2_xsec.npy')
-	lam_heh2 = np.load('/Users/sahil/Group-Studies---Exoplanets/GivenResources/cross_section_files/Cross_section_files/he_h2_lam.npy')
+	xsec_heh2 = np.load('/Group 1 Full Loop Code/GivenResources/cross_section_files/Cross_section_files/he_h2_xsec.npy')
+	lam_heh2 = np.load('/Group 1 Full Loop Code/GivenResources/cross_section_files/Cross_section_files/he_h2_lam.npy')
 
 	lam = np.linspace(0.61,5.0,200)
 
@@ -206,9 +206,9 @@ while rowCount < len(planetaryParameters):
 	plt.xlim([2.5,5.0])
 
 
-	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/{filedirectory}/spectrum plots/planet_spectrum_{PName}.png')
+	plt.savefig(f'/Group 1 Full Loop Code/{filedirectory}/spectrum plots/planet_spectrum_{PName}.png')
 	plt.close()
-	np.savetxt(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{PName}.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
+	np.savetxt(f'/Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{PName}.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
 
 
 	exo_dict = jdi.load_exo_dict()
@@ -228,7 +228,7 @@ while rowCount < len(planetaryParameters):
 	exo_dict['planet']['transit_duration'] = planetaryParameters[rowCount][8]    ##transit duration in days
 	exo_dict['planet']['td_unit'] = 'h'
 	exo_dict['planet']['type'] = 'user'                                          ## 'user' for user defined spectrum or 'constant' for constant spectrum
-	exo_dict['planet']['exopath'] = f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/165 planets data/spectrum txt files/planet_spectrum_{PName}.txt'       ## path to user defined spectrum file
+	exo_dict['planet']['exopath'] = f'/Group 1 Full Loop Code/165 planets data/spectrum txt files/planet_spectrum_{PName}.txt'       ## path to user defined spectrum file
 	exo_dict['planet']['f_unit'] = 'rp^2/r*^2'                                   ## flux unit for user defined spectrum
 	exo_dict['planet']['w_unit'] = 'um'                                          ## wavelength unit for user defined spectra
 
@@ -257,14 +257,14 @@ while rowCount < len(planetaryParameters):
 	plt.xlim(2.8,5)
 	plt.legend(frameon=True)
 	plt.grid(True, alpha=0.3)
-	plt.savefig(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/{filedirectory}/JWST plots/{PName}_JWST_simulated_observation.png')
+	plt.savefig(f'/Group 1 Full Loop Code/{filedirectory}/JWST plots/{PName}_JWST_simulated_observation.png')
 	plt.close()
 	df = pd.DataFrame({
     'Wavelength_um': wavelength,
     'Transit_Depth_ppm': observed_depth * 1e6,
     'Error_ppm': errors * 1e6 })
 
-	df.to_csv(f'/Users/sahil/Group-Studies---Exoplanets/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{PName}_JWST_results.csv', index=False)
+	df.to_csv(f'/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{PName}_JWST_results.csv', index=False)
 
 	print(f'---Finished analysing planet: {PName}---')
 	rowCount += 1
