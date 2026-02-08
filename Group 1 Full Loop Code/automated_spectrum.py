@@ -1,29 +1,31 @@
-import os
-import numpy as np
-import scipy.constants as sc
-from scipy.interpolate import RegularGridInterpolator
-import astropy.constants as const
-import matplotlib.pyplot as plt
-import csv
-import warnings
+## --------------------- LOADING IN ALL NECESSARY PACKAGES AND DIRECTORIES --------------------- ##
+import os, csv, warnings 
 warnings.filterwarnings('ignore')
-import pandexo.engine.justdoit as jdi # THIS IS THE HOLY GRAIL OF PANDEXO
 import numpy as np
-import pandexo.engine.justplotit as jpi 
 import pandas as pd
-import os
+import scipy.constants as sc
+import matplotlib.pyplot as plt
+import astropy.constants as const
+import pandexo.engine.justdoit as jdi 
+import pandexo.engine.justplotit as jpi 
+from scipy.interpolate import RegularGridInterpolator
+
+os.environ['pandeia_refdata']="/Users/sahil/Documents/Pandexo/pandeia"
+os.environ['PYSYN_CDBS']="/Users/sahil/Documents/Pandexo/grp/redcat/trds"
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '## planets data'   ##  name of folder just change number
+filedirectory = '40 planets data'   ##  name of folder just change number
 
-with open(f'{PROJECT_DIR}/Data/##.csv', newline="") as PlanetaryParametersFile:   ## Add name of file
-	reader = csv.reader(PlanetaryParametersFile)
+with open(f'/Users/sahil/Group-Studies---Exoplanets/Data/40_planets_under_1000K05.02_15-55.csv', newline="") as planetaryparametersfile:   ## Add name of file
+	reader = csv.reader(planetaryparametersfile)
 	header = next(reader)
+	
 	data = []
-	planetNames = []
+	planetnames = []
+	
 	for row in reader:
 		row = [item.strip() for item in row]
 		if len(row) == 0:
@@ -31,38 +33,24 @@ with open(f'{PROJECT_DIR}/Data/##.csv', newline="") as PlanetaryParametersFile: 
 		name, *nums = row
 		conv = [float(item) if item != "" else np.nan for item in nums]
 		data.append(conv)
-		planetNames.append(name)
-	planetaryParameters = np.array(data, dtype=float)
+		planetnames.append(name)
+	
+	planetaryparameters = np.array(data, dtype=float)
 
 def bin_spectrum(wave, flux, error, bin_width=0.0225):
-    """
-    Bins spectrum using weighted averaging.
-    bin_width is in the same units as wave (microns).
-    """
-    # Create the bins
     bins = np.arange(min(wave), max(wave), bin_width)
-    
     binned_wave = []
     binned_flux = []
     binned_err = []
-
     for i in range(len(bins) - 1):
-        # Find indices of points that fall into this bin
         indices = np.where((wave >= bins[i]) & (wave < bins[i+1]))[0]
-        
         if len(indices) > 0:
             w = wave[indices]
             f = flux[indices]
             e = error[indices]
-            
-            # 1. Calculate Weights (1/sigma^2)
+
             weights = 1.0 / (e**2)
-            
-            # 2. Weighted Average for Flux
             weighted_f = np.sum(f * weights) / np.sum(weights)
-            
-            # 3. Propagated Error for the bin
-            # The formula is: 1 / sqrt(sum(1/sigma^2))
             propagated_e = np.sqrt(1.0 / np.sum(weights))
             
             binned_wave.append(np.mean(w))
@@ -71,33 +59,27 @@ def bin_spectrum(wave, flux, error, bin_width=0.0225):
             
     return np.array(binned_wave), np.array(binned_flux), np.array(binned_err)
 	
-rowCount= 0 
-while rowCount < len(planetaryParameters):
-	PName = planetNames[rowCount]                                   ## planet name   
-	print(f"---Analysing Planet: {PName} ----")
-	print(f"Star Magnitude: {planetaryParameters[rowCount][20]}")
-
-    ## CHANGE INDEXES IF NEED BE ##
+rowcount = 0 
+while rowcount < len(planetaryparameters):
+	## ----------------------------- LOAD PLANETARY PARAMETERS ------------------------------ ##
+	planet_id = planetnames[rowcount]                               ## planet name   
+	print(f"------------ Analysing Planet: {planet_id} --------------")
 	
-	Rp = planetaryParameters[rowCount][3]                           ## planet radius in units of Earth radii
-	Mp = planetaryParameters[rowCount][2]                           ## planet mass in units of Earth masses
-	Tp = planetaryParameters[rowCount][39]                          ## planet temperature in K
-	mu = 4.88                                                       ## mean molecular weight in atomic mass units
-	Pcloud = 100 
-	Pref = 0.01                                                     ## pressure at top of cloud deck in bar  
-	Rs = planetaryParameters[rowCount][14]                          ## stellar radius in units of Solar radii     
-	Rp *= const.R_earth.value                                       ## Convert Rp from units of R_Earth to m
-	Rs *= const.R_sun.value                                         ## Convert Rs from units of R_Sun to m
-	Pcloud *= 1.0e5                                                 ## Convert Pcloud from bar to Pa
-	Pref *= 1.0e5                                                   ## Convert Pref from bar to Pa
-	mu *= sc.u                                                      ## Convert mu from atomic mass units to kg
-
+	Rp = planetaryparameters[rowcount][3] * const.R_earth.value     ## planet radius in units of Earth radii * Earth radius in m
+	Mp = planetaryparameters[rowcount][2]                           ## planet mass in units of Earth masses
+	Tp = planetaryparameters[rowcount][39]                          ## planet temperature in K
+	Rs = planetaryparameters[rowcount][14] * const.R_sun.value      ## stellar radius in units of Solar radii * Solar radius in m    
 	
+	mu = 4.88 * sc.u                                       		   ## mean molecular weight in atomic mass units * atomic mass unit in kg
+	Pcloud = 100 * 1.0e5                                   		   ## pressure at top of cloud deck in Pa (100 bar) * convert to Pa
+	Pref = 0.01 * 1.0e5                                   		   ## pressure at top of cloud deck in bar * convert to Pa 
+
+	## --------------------- ATOMOSPHERIC COMPOSOTION/ABSOBTION SPECTRA --------------------- ##
 
 	P = np.logspace(2.0,-9,100) * 1.0e5
-	T = Tp*np.ones_like(P)
-	n = P/(sc.k*T)
-	rho = mu*n
+	T = Tp * np.ones_like(P)
+	n = P / (sc.k * T)
+	rho = mu * n
 	gp = (sc.G * Mp * const.M_earth.value) / (Rp)**2
 	r = np.zeros_like(P)
 	g = np.zeros_like(P)
@@ -113,6 +95,7 @@ while rowCount < len(planetaryParameters):
 		g[i] = g[i_Rp] * r[i_Rp] * r[i_Rp] / (r[i+1] * r[i+1])
 		r[i] = r[i+1] - ( sc.k * 0.5 * (T[i+1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i+1])
 	# First, set up a dictionary which will contain all the log mixing ratios, and input the abundances of all molecules except H2 and He
+	
 	logX = dict()
 	logX['h2o'] = -1.1        ## fixed compositions
 	logX['ch4'] = -1.74
@@ -235,75 +218,115 @@ while rowCount < len(planetaryParameters):
 			integral_lt_Rp[:] += 0.5*((r[i]*(exptau[i, :]) + (r[i+1]*(exptau[i+1, :])))*(r[i+1] - r[i]))
 
 	# Compute effective transit depth (transmission spectrum) #
-	transit_depth[:] = (Rp*Rp + 2.0*integral_gt_Rp[:] - 2.0*integral_lt_Rp[:])/(Rs*Rs)
+	transit_depth[:] = (Rp * Rp + 2.0 * integral_gt_Rp[:] - 2.0 * integral_lt_Rp[:])/  (Rs * Rs)
 
-	plt.Figure(figsize=(12,8))
-	plt.plot(lam,transit_depth*1e6) #convert transit_depth into units of ppm
-	plt.xlabel('Wavelength (microns)')
+	plt.figure(figsize=(12,8))
+	plt.plot(lam,transit_depth * 1e6) #convert transit depth into units of ppm
+	plt.xlabel('Wavelength (um)')
 	plt.ylabel('Transit Depth (ppm)')
-	plt.title(f'Transmission Spectrum of {PName}')
-	plt.xlim([2.5,5.0])
-
-
-	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum plots/planet_spectrum_{PName}.png')
+	plt.title(f'[{planet_id}] Transmission Spectrum')
+	plt.xlim([2.8,5.0])
+	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum plots/planet_spectrum_{planet_id}.png')
 	plt.close()
-	np.savetxt(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{PName}.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
 
+	np.savetxt(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{planet_id}.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
+
+	## ------------------------------------- SCALE HEIGHT --------------------------------- ##
+
+	left_mask = (lam >= 4.0) & (lam <= 4.3) ## Finding Left Trough (4.0 - 4.3 um)
+	left_val = np.min(transit_depth[left_mask]) 
+	left_lam_target = lam[left_mask][np.argmin(transit_depth[left_mask])]
+
+	right_mask = (lam >= 4.6) & (lam <= 4.8) ## Finding Right Trough (4.6 - 4.8 um)
+	right_val = np.min(transit_depth[right_mask])
+	right_lam_target = lam[right_mask][np.argmin(transit_depth[right_mask])]
+	
+	peak_mask = (lam >= left_lam_target) & (lam <= right_lam_target) ## Finding Peak Region (between the troughs)
+	peak_region_depths = transit_depth[peak_mask]
+
+	peak_val = np.max(peak_region_depths)	# 5. Calculate Height and the Scatter Error
+	baseline = (left_val + right_val) / 2
+	feature_height_ratio = (peak_val - baseline)
+	feature_height_ppm = (peak_val - baseline) * 1e6
+
+	peak_scatter_error_ppm = np.std(peak_region_depths) * 1e6
+
+	scale_height = (sc.k * Tp) / (mu * gp * sc.m_p)
+
+	A_H = feature_height_ratio * (Rs ** 2) / (2 * scale_height * Rp)
+
+	## ----------------------------------- PANDEXO PLOTTING ----------------------------------- ##
 
 	exo_dict = jdi.load_exo_dict()
-    ## star dict
+    
+	## star dictionary
 	exo_dict['star']['type'] = 'phoenix'     
-	exo_dict['star']['temp'] = planetaryParameters[rowCount][16]                 ## temperature in K 
-	exo_dict['star']['metal'] = planetaryParameters[rowCount][18]                ## metallacity as log Fe/H
-	exo_dict['star']['logg'] = planetaryParameters[rowCount][22]                 ## log gravity cgs
-	exo_dict['star']['mag'] = planetaryParameters[rowCount][20]                  ## star J magnitude
+	exo_dict['star']['temp'] = planetaryparameters[rowcount][16]                 ## temperature in K 
+	exo_dict['star']['metal'] = planetaryparameters[rowcount][18]                ## metallacity as log Fe/H
+	exo_dict['star']['logg'] = planetaryparameters[rowcount][22]                 ## log gravity cgs
+	exo_dict['star']['mag'] = planetaryparameters[rowcount][20]                  ## star J magnitude
 	exo_dict['star']['ref_wave'] = 1.25
-	exo_dict['star']['radius'] = planetaryParameters[rowCount][14]               ##radius of the star in solar radii
+	exo_dict['star']['radius'] = planetaryparameters[rowcount][14]               ## radius of the star in solar radii
 	exo_dict['star']['r_unit'] = 'R_sun'
 
-    ## planet dict
-	exo_dict['planet']['radius'] = planetaryParameters[rowCount][3]              ##radius of the planet in earth radii        
-	exo_dict['planet']['r_unit'] = 'R_earth'                                     ## or R_jup
-	exo_dict['planet']['transit_duration'] = planetaryParameters[rowCount][8]    ##transit duration in days
+    ## planet dictionary
+	exo_dict['planet']['radius'] = planetaryparameters[rowcount][3]              ## radius of the planet in earth radii        
+	exo_dict['planet']['r_unit'] = 'R_earth'                                    
+	exo_dict['planet']['transit_duration'] = planetaryparameters[rowcount][8]    ## transit duration in days
 	exo_dict['planet']['td_unit'] = 'h'
 	exo_dict['planet']['type'] = 'user'                                          ## 'user' for user defined spectrum or 'constant' for constant spectrum
-	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{PName}.txt'       ## path to user defined spectrum file
+	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{planet_id}.txt'       ## path to user defined spectrum file
 	exo_dict['planet']['f_unit'] = 'rp^2/r*^2'                                   ## flux unit for user defined spectrum
 	exo_dict['planet']['w_unit'] = 'um'                                          ## wavelength unit for user defined spectra
-
-	exo_dict['observation']['baseline'] = 2.0 
+	
+	## Error and observation parameters
+	exo_dict['observation']['baseline'] = 1.0 
 	exo_dict['observation']['baseline_unit'] = 'frac'
 	exo_dict['observation']['noccultations'] = 1                                 ## number of transits (changed to match num_tran=10 in plot)
 	exo_dict['observation']['sat_level'] = 80                                    ## saturation level in percent of full well 
 	exo_dict['observation']['sat_unit'] = '%' 
 	exo_dict['observation']['noise_floor'] = 0
 
-	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395H'] ,save_file=False)
-
-	spec_dict = jpi.jwst_1d_spec(result, R=500, model=True, title=f'JWST Plot of {PName}', x_range=[2.8, 5.0], plot=False)
+	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395H'], save_file = False)
+	spec_dict = jpi.jwst_1d_spec(result, R = 500, model = True, title = f'JWST Data {planet_id}', x_range=[2.8, 5.0], plot = False)
 
 	wavelength = result['FinalSpectrum']['wave']
 	observed_depth = result['FinalSpectrum']['spectrum_w_rand'] # Data + Noise
 	model_depth = result['FinalSpectrum']['spectrum']          # The smooth model
 	errors = result['FinalSpectrum']['error_w_floor']   # The 1-sigma uncertainties
 	
-	plt.errorbar(wavelength, model_depth, yerr=errors, fmt='s', color='royalblue', 
-             markersize=1, alpha=0.1, label=f'{PName} Simulated Data')      
+	plt.errorbar(wavelength, model_depth, yerr=errors, fmt='s', color='royalblue', markersize=1, alpha=0.1, label=f'{planet_id} Simulated Data')      
 	plt.ylim([min(model_depth)*0.9, max(model_depth)*1.1])
 	plt.xlabel('Wavelength ($\mu$m)', fontsize=8)
 	plt.ylabel('Transit Depth (ppm)', fontsize=8)
-	plt.title(f'PandExo Simulated Observation for {PName}', fontsize=10)
+	plt.title(f'PandExo Simulated Observation for {planet_id}', fontsize=10)
 	plt.xlim(2.8,5)
 	plt.legend(frameon=True)
 	plt.grid(True, alpha=0.3)
-	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST plots/{PName}_JWST_simulated_observation.png')
+	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST plots/{planet_id}_JWST_simulated_observation.png')
 	plt.close()
+
 	df = pd.DataFrame({
     'Wavelength_um': wavelength,
     'Transit_Depth_ppm': observed_depth * 1e6,
     'Error_ppm': errors * 1e6 })
+	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{planet_id}_JWST_results.csv', index=False)
+	
+	## ----------------------------------- Model Binning vs Simulated Observation ----------------------------------- ##
 
-	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST results/{PName}_JWST_results.csv', index=False)
+	b_wave, b_obs, b_err = bin_spectrum(wavelength, observed_depth, errors, bin_width=0.0225)
 
-	print(f'---Finished analysing planet: {PName}---')
-	rowCount += 1
+	plt.errorbar(b_wave, b_obs, yerr=b_err, fmt='o', color='royalblue', markersize=3, alpha=0.8, label='Binned Simulated Observation', zorder=2)
+	plt.plot(wavelength, model_depth, color='firebrick', label='Input Model (Truth)', lw=1, zorder=1)
+	plt.ylim(baseline * 0.985, peak_val * 1.005)
+	plt.xlabel('Wavelength ($\mu$m)', fontsize=12)
+	plt.ylabel('Transit Depth (ppm or fractional)', fontsize=12)
+	plt.title(f'PandExo Comparison: Model vs. Simulated Observation for {planet_id}', fontsize=14)
+	plt.xlim(2.8,5)
+	plt.legend(frameon=True)
+	plt.grid(True, alpha=0.3)
+	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/binned plots/{planet_id}_binned.png')
+	plt.close()
+
+	print(f'-------------- Finished analysing planet: {planet_id} ----------')
+	rowcount += 1
