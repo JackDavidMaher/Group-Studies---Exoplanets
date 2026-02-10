@@ -6,8 +6,6 @@ import pandas as pd
 import scipy.constants as sc
 import matplotlib.pyplot as plt
 import astropy.constants as const
-import pandexo.engine.justdoit as jdi 
-import pandexo.engine.justplotit as jpi 
 from scipy.interpolate import RegularGridInterpolator
 from dotenv import load_dotenv
 
@@ -20,7 +18,13 @@ os.environ['PYSYN_CDBS']=os.getenv('PYSYN_CDBS')
 ## CHANGE PATH IF NEED BE ##
 filedirectory = '40 planets data'   ##  name of folder just change number
 
-with open(f'/Users/sahil/Group-Studies---Exoplanets/Data/40_planets_under_1000K05.02_15-55.csv', newline="") as planetaryparametersfile:   ## Add name of file
+print("pandeia_refdata =", os.environ.get('pandeia_refdata'))
+
+
+import pandexo.engine.justdoit as jdi 
+import pandexo.engine.justplotit as jpi 
+
+with open(f'{PROJECT_DIR}/Data/40_planets_under_1000K05.02_15-55.csv', newline="") as planetaryparametersfile:   ## Add name of file
 	reader = csv.reader(planetaryparametersfile)
 	header = next(reader)
 	
