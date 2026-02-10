@@ -9,13 +9,14 @@ import astropy.constants as const
 import pandexo.engine.justdoit as jdi 
 import pandexo.engine.justplotit as jpi 
 from scipy.interpolate import RegularGridInterpolator
+from dotenv import load_dotenv
 
-os.environ['pandeia_refdata']="/Users/sahil/Documents/Pandexo/pandeia"
-os.environ['PYSYN_CDBS']="/Users/sahil/Documents/Pandexo/grp/redcat/trds"
-
+load_dotenv()
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 
+os.environ['pandeia_refdata']=os.getenv('pandeia_refdata')
+os.environ['PYSYN_CDBS']=os.getenv('PYSYN_CDBS')
 ## CHANGE PATH IF NEED BE ##
 filedirectory = '40 planets data'   ##  name of folder just change number
 
