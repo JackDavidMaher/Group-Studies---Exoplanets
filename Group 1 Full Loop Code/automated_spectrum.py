@@ -38,27 +38,31 @@ with open(f'/Users/sahil/Group-Studies---Exoplanets/Data/40_planets_under_1000K0
 	
 	planetaryparameters = np.array(data, dtype=float)
 
-def bin_spectrum(wave, flux, error, bin_width=0.0225):
+def bin_spectrum(wave, flux, model, error, bin_width=0.0225):
     bins = np.arange(min(wave), max(wave), bin_width)
     binned_wave = []
     binned_flux = []
+    binned_model = []
     binned_err = []
     for i in range(len(bins) - 1):
         indices = np.where((wave >= bins[i]) & (wave < bins[i+1]))[0]
         if len(indices) > 0:
             w = wave[indices]
             f = flux[indices]
+            m = model[indices] 
             e = error[indices]
 
             weights = 1.0 / (e**2)
             weighted_f = np.sum(f * weights) / np.sum(weights)
+            weighted_m = np.sum(m * weights) / np.sum(weights)
             propagated_e = np.sqrt(1.0 / np.sum(weights))
             
             binned_wave.append(np.mean(w))
             binned_flux.append(weighted_f)
+            binned_model.append(weighted_m)
             binned_err.append(propagated_e)
             
-    return np.array(binned_wave), np.array(binned_flux), np.array(binned_err)
+    return np.array(binned_wave), np.array(binned_flux),np.array(binned_model), np.array(binned_err)
 	
 rowcount = 0 
 while rowcount < len(planetaryparameters):
@@ -289,14 +293,14 @@ while rowcount < len(planetaryparameters):
 	exo_dict['observation']['noise_floor'] = 0
 
 	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395H'], save_file = False)
-	spec_dict = jpi.jwst_1d_spec(result, R = 500, model = True, title = f'JWST Data {planet_id}', x_range=[2.8, 5.0], plot = False)
-
+	
 	wavelength = result['FinalSpectrum']['wave']
 	observed_depth = result['FinalSpectrum']['spectrum_w_rand'] # Data + Noise
 	model_depth = result['FinalSpectrum']['spectrum']          # The smooth model
 	errors = result['FinalSpectrum']['error_w_floor']   # The 1-sigma uncertainties
 	
-	plt.errorbar(wavelength, model_depth, yerr=errors, fmt='s', color='royalblue', markersize=1, alpha=0.1, label=f'{planet_id} Simulated Data')      
+	plt.errorbar(wavelength, observed_depth, yerr=errors, fmt='s', color='royalblue', markersize=1, alpha=0.1, label=f'{planet_id} Simulated Data', zorder = 1)
+	plt.plot(wavelength, model_depth, color = 'firebrick', zorder = 2)      
 	plt.ylim([min(model_depth)*0.9, max(model_depth)*1.1])
 	plt.xlabel('Wavelength ($\mu$m)', fontsize=8)
 	plt.ylabel('Transit Depth (ppm)', fontsize=8)
@@ -309,25 +313,10 @@ while rowcount < len(planetaryparameters):
 
 	df = pd.DataFrame({
     'Wavelength_um': wavelength,
-    'Transit_Depth_ppm': observed_depth * 1e6,
-    'Error_ppm': errors * 1e6 })
+	'Model_Depth': model_depth,
+    'Transit_Depth': observed_depth,
+    'Error_ppm': errors})
 	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{planet_id}_JWST_results.csv', index=False)
-	
-	## ----------------------------------- Model Binning vs Simulated Observation ----------------------------------- ##
-
-	b_wave, b_obs, b_err = bin_spectrum(wavelength, observed_depth, errors, bin_width=0.0225)
-
-	plt.errorbar(b_wave, b_obs, yerr=b_err, fmt='o', color='royalblue', markersize=3, alpha=0.8, label='Binned Simulated Observation', zorder=2)
-	plt.plot(wavelength, model_depth, color='firebrick', label='Input Model (Truth)', lw=1, zorder=1)
-	plt.ylim(baseline * 0.985, peak_val * 1.005)
-	plt.xlabel('Wavelength ($\mu$m)', fontsize=12)
-	plt.ylabel('Transit Depth (ppm or fractional)', fontsize=12)
-	plt.title(f'PandExo Comparison: Model vs. Simulated Observation for {planet_id}', fontsize=14)
-	plt.xlim(2.8,5)
-	plt.legend(frameon=True)
-	plt.grid(True, alpha=0.3)
-	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/binned plots/{planet_id}_binned.png')
-	plt.close()
 
 	print(f'-------------- Finished analysing planet: {planet_id} ----------')
 	rowcount += 1
