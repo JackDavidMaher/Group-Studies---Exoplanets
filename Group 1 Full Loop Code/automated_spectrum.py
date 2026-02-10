@@ -6,6 +6,7 @@ import pandas as pd
 import scipy.constants as sc
 import matplotlib.pyplot as plt
 import astropy.constants as const
+import pandexo.engine.justdoit as jdi 
 from scipy.interpolate import RegularGridInterpolator
 from dotenv import load_dotenv
 
@@ -15,6 +16,7 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 
 os.environ['pandeia_refdata']=os.getenv('pandeia_refdata')
 os.environ['PYSYN_CDBS']=os.getenv('PYSYN_CDBS')
+
 ## CHANGE PATH IF NEED BE ##
 filedirectory = '40 planets data'   ##  name of folder just change number
 
@@ -297,7 +299,7 @@ while rowcount < len(planetaryparameters):
 	exo_dict['observation']['noise_floor'] = 0
 
 	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395H'], save_file = False)
-	
+
 	wavelength = result['FinalSpectrum']['wave']
 	observed_depth = result['FinalSpectrum']['spectrum_w_rand'] # Data + Noise
 	model_depth = result['FinalSpectrum']['spectrum']          # The smooth model
