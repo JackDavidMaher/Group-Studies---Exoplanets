@@ -6,14 +6,13 @@ import pandas as pd
 import scipy.constants as sc
 import matplotlib.pyplot as plt
 import astropy.constants as const
-import pandexo.engine.justdoit as jdi 
 from scipy.interpolate import RegularGridInterpolator
 from dotenv import load_dotenv
 
 load_dotenv()
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
-
+# This sets the environment variables for pandeia_refdata and PYSYN_CDBS to the values in the .env file, which should be set to the correct paths on your system. If these environment variables are already set in your system, this will not change them.
 os.environ['pandeia_refdata']=os.getenv('pandeia_refdata')
 os.environ['PYSYN_CDBS']=os.getenv('PYSYN_CDBS')
 
