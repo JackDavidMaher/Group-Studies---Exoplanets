@@ -8,7 +8,8 @@ import os
 import subprocess
 import shutil
 import sys
-
+import time
+s = time.process_time()
 # This section runs the SpectrumImageCleaner to remove any existing spectrums from the computer so dupliucates are not created
 script_dir = os.path.dirname(os.path.abspath(__file__))
 c_src = os.path.join(script_dir, 'SpectrumImageCleaner.c')
@@ -29,7 +30,7 @@ else:
 	if run_proc.stdout:
 		print(run_proc.stdout)
 
-
+e1 = time.process_time()
 
 with open("Group 1 Spectrum Code/PlanetaryParameters.csv", newline="") as PlanetaryParametersFile:
 	reader = csv.reader(PlanetaryParametersFile)
@@ -244,3 +245,7 @@ while rowCount < len(planetaryParameters):
 	# Save the plot into the same output directory
 	plt.savefig(os.path.join(plots_dir, f'TransmissionSpectrum{safe_name}.png'))
 	plt.clf()
+e = time.process_time() # end time
+
+print("Elapsed time: ", e - s, "seconds")
+print("elapsed time without cleaning: ", e - e1, "seconds")
