@@ -19,11 +19,37 @@ os.environ['PYSYN_CDBS']=os.getenv('PYSYN_CDBS')
 ## CHANGE PATH IF NEED BE ##
 filedirectory = '40 planets data'   ##  name of folder just change number
 
-print("pandeia_refdata =", os.environ.get('pandeia_refdata'))
+xsec_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_xsec.npy')
+lam_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_lam.npy') * 1e6 # convert to microns
+P_h2o = np.power(10.0,np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_P.npy')) # already in Pa
+T_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_T.npy')
 
+# Read in CO2 cross section data
+xsec_co2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/co2_xsec.npy')
+lam_co2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/co2_lam.npy') * 1e6 # convert to microns
+P_co2 = np.power(10.0,np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/co2_P.npy')) # already in Pa
+T_co2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/co2_T.npy')
+
+# Read in CH4 cross section data
+xsec_ch4 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/ch4_xsec.npy')
+lam_ch4 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/ch4_lam.npy') * 1e6 # convert to microns
+P_ch4 = np.power(10.0,np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/ch4_P.npy')) # already in Pa
+T_ch4 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/ch4_T.npy')
+
+#read in CO cross section data
+xsec_co = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/co_xsec.npy')
+lam_co = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/co_lam.npy') * 1e6 # convert to microns   
+P_co = np.power(10.0,np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/co_P.npy')) # already in Pa
+T_co = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/co_T.npy')
+
+# H2-H2 and He-H2 molecule pairs cause absorption through a process called "collision-induced absorption". This data is wavelength- and temperature-dependent, but not pressure-dependent.
+xsec_h2h2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2_h2_xsec.npy')
+lam_h2h2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2_h2_lam.npy')
+
+xsec_heh2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/he_h2_xsec.npy')
+lam_heh2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/he_h2_lam.npy')
 
 import pandexo.engine.justdoit as jdi 
-import pandexo.engine.justplotit as jpi 
 
 with open(f'{PROJECT_DIR}/Data/40_planets_under_1000K05.02_15-55.csv', newline="") as planetaryparametersfile:   ## Add name of file
 	reader = csv.reader(planetaryparametersfile)
@@ -88,7 +114,7 @@ while rowcount < len(planetaryparameters):
 	Rs = planetaryparameters[rowcount][14] * const.R_sun.value      ## stellar radius in units of Solar radii * Solar radius in m    
 	
 	mu = 4.88 * sc.u                                       		   ## mean molecular weight in atomic mass units * atomic mass unit in kg
-	Pcloud = 10 ** pressure(Tp)                                  		   ## pressure at top of cloud deck in Pa (100 bar) * convert to Pa
+	Pcloud = 10 ** pressure(Tp) * 1.0e5                                  		   ## pressure at top of cloud deck in Pa (100 bar) * convert to Pa
 	Pref = 0.01 * 1.0e5                                   		   ## pressure at top of cloud deck in bar * convert to Pa 
 
 	## --------------------- ATOMOSPHERIC COMPOSOTION/ABSOBTION SPECTRA --------------------- ##
@@ -104,17 +130,9 @@ while rowcount < len(planetaryparameters):
 	r[i_Rp] = Rp
 	g[i_Rp] = gp
 
-	for i in range(i_Rp + 1, len(P)):
-		g[i] = g[i_Rp] * r[i_Rp] * r[i_Rp] / (r[i-1] * r[i-1])
-		r[i] = r[i-1] - ( sc.k * 0.5 * (T[i-1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i-1]) 
-
-	for i in range(i_Rp-1, -1, -1):
-		g[i] = g[i_Rp] * r[i_Rp] * r[i_Rp] / (r[i+1] * r[i+1])
-		r[i] = r[i+1] - ( sc.k * 0.5 * (T[i+1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i+1])
 	# First, set up a dictionary which will contain all the log mixing ratios, and input the abundances of all molecules except H2 and He
-	
 	logX = dict()
-	logX['h2o'] = -1.1        ## fixed compositions
+	logX['h2o'] = -1.1
 	logX['ch4'] = -1.74
 	logX['co'] = -2.0
 	logX['co2'] = -1.7
@@ -142,49 +160,64 @@ while rowcount < len(planetaryparameters):
 	logX['h2'] = np.log10(X_H2)
 	logX['he'] = np.log10(X_He)
 
+	for i in range(i_Rp + 1, len(P)):
+		g[i] = g[i_Rp] * r[i_Rp] * r[i_Rp] / (r[i-1] * r[i-1])
+		r[i] = r[i-1] - ( sc.k * 0.5 * (T[i-1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i-1]) 
+
+	for i in range(i_Rp-1, -1, -1):
+		g[i] = g[i_Rp] * r[i_Rp] * r[i_Rp] / (r[i+1] * r[i+1])
+		r[i] = r[i+1] - ( sc.k * 0.5 * (T[i+1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i+1])
+
 	# With all the mixing ratios defined, we can calculate the mean molecular weight of the atmosphere, mu:
 	mu = 0.0
 	for mol in logX.keys():
 		mu += np.power(10.0,logX[mol])*mmw[mol]
 
-	#print("The mean molecular weight is:", mu)
-
 	xsec_dict = dict()
 	lam_dict = dict()
 	P_dict = dict()
 	T_dict = dict()
+	
 
-	for mol in mmw.keys():
-		if mol =='h2':
-			break
-		else:
-			xsec_dict[mol] = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/{mol}_xsec.npy') #cross-section
-			lam_dict[mol] = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/{mol}_lam.npy')*1e6 # convert to microns, wavelength
-			P_dict[mol] = np.power(10.0,np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/{mol}_P.npy')) # already in Pa, pressure
-			T_dict[mol] = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/{mol}_T.npy') # temperature
-
-
-	# H2-H2 and He-H2 molecule pairs cause absorption through a process called "collision-induced absorption". This data is wavelength- and temperature-dependent, but not pressure-dependent.
-	xsec_h2h2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2_h2_xsec.npy')
-	lam_h2h2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2_h2_lam.npy')
-
-	xsec_heh2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/he_h2_xsec.npy')
-	lam_heh2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/he_h2_lam.npy')
-	lam = np.linspace(0.61,5.0,200)
+	lam = np.linspace(0.61,5.0,500)
 
 	log_xsec_dict = dict()
 
-    #all molecules
-	for mol in logX.keys():
-		if mol =='h2':
-			break
-		interp_xsec = RegularGridInterpolator((lam_dict[mol], P_dict[mol], T_dict[mol]), xsec_dict[mol], method='linear', bounds_error=False, fill_value=None)
-		lamlam, PP = np.meshgrid(lam, P, indexing="ij")
-    	# Ensure requested temperature is inside the interpolator grid (avoid out-of-bounds)
-		T0 = np.clip(T[0], T_dict[mol].min(), T_dict[mol].max())
-		# Build points with shape (npoints, ndim) for the interpolator, then reshape back
-		pts = np.vstack((lamlam.ravel(), PP.ravel(), np.full(lamlam.size, T0))).T
-		log_xsec_dict[mol] = interp_xsec(pts).reshape(lamlam.shape)  # this assumes an isothermal atmosphere
+	lamlam, PP = np.meshgrid(lam, P, indexing="ij")
+
+	# ---- H2O ----
+	interp_h2o = RegularGridInterpolator(
+		(lam_h2o, P_h2o, T_h2o),
+		xsec_h2o,
+		method='linear', bounds_error=False,
+		fill_value=None)
+	log_xsec_dict['h2o'] = interp_h2o((lamlam, PP, T[0]))
+
+	# ---- CO2 ----
+	interp_co2 = RegularGridInterpolator(
+		(lam_co2, P_co2, T_co2),
+		xsec_co2,
+		method='linear', bounds_error=False,
+		fill_value=None
+	)
+	log_xsec_dict['co2'] = interp_co2((lamlam, PP, T[0]))
+
+	# ---- CH4 ----
+	interp_ch4 = RegularGridInterpolator(
+		(lam_ch4, P_ch4, T_ch4),
+		xsec_ch4,
+		method='linear', bounds_error=False,
+		fill_value=None
+	)
+	log_xsec_dict['ch4'] = interp_ch4((lamlam, PP, T[0]))
+
+	interp_co2 = RegularGridInterpolator(
+		(lam_co, P_co, T_co),
+		xsec_co,
+		method='linear', bounds_error=False,
+		fill_value=None
+	)
+	log_xsec_dict['co'] = interp_co2((lamlam, PP, T[0]))
 
 	log_cia_dict = dict()
 	log_cia_dict['h2h2'] = np.interp(lam, lam_h2h2, xsec_h2h2)
@@ -235,7 +268,7 @@ while rowcount < len(planetaryparameters):
 			integral_lt_Rp[:] += 0.5*((r[i]*(exptau[i, :]) + (r[i+1]*(exptau[i+1, :])))*(r[i+1] - r[i]))
 
 	# Compute effective transit depth (transmission spectrum) #
-	transit_depth[:] = (Rp * Rp + 2.0 * integral_gt_Rp[:] - 2.0 * integral_lt_Rp[:])/  (Rs * Rs)
+	transit_depth[:] = (Rp*Rp + 2.0*integral_gt_Rp[:] - 2.0*integral_lt_Rp[:])/(Rs*Rs)
 
 	plt.figure(figsize=(12,8))
 	plt.plot(lam,transit_depth * 1e6) #convert transit depth into units of ppm
@@ -297,7 +330,7 @@ while rowcount < len(planetaryparameters):
 	exo_dict['planet']['w_unit'] = 'um'                                          ## wavelength unit for user defined spectra
 	
 	## Error and observation parameters
-	exo_dict['observation']['baseline'] = 1.0 
+	exo_dict['observation']['baseline'] = 2.0 
 	exo_dict['observation']['baseline_unit'] = 'frac'
 	exo_dict['observation']['noccultations'] = 1                                 ## number of transits (changed to match num_tran=10 in plot)
 	exo_dict['observation']['sat_level'] = 80                                    ## saturation level in percent of full well 
