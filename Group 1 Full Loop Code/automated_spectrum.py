@@ -243,24 +243,24 @@ while rowcount < len(planetaryparameters):
 
 	## ------------------------------------- SCALE HEIGHT --------------------------------- ##
 
-	left_mask = (lam >= 4.0) & (lam <= 4.3) ## Finding Left Trough (4.0 - 4.3 um)
-	left_val = np.min(transit_depth[left_mask]) 
-	left_lam_target = lam[left_mask][np.argmin(transit_depth[left_mask])]
-
-	right_mask = (lam >= 4.6) & (lam <= 4.8) ## Finding Right Trough (4.6 - 4.8 um)
-	right_val = np.min(transit_depth[right_mask])
-	right_lam_target = lam[right_mask][np.argmin(transit_depth[right_mask])]
+	left_mask = (lam >= 4.1) & (lam <= 4.15)
 	
-	peak_mask = (lam >= left_lam_target) & (lam <= right_lam_target) ## Finding Peak Region (between the troughs)
-	peak_region_depths = transit_depth[peak_mask]
+	left_depth_values = transit_depth[left_mask]
+	left_lam_values = lam[left_mask]
+	
+	left_val = np.mean(left_depth_values)
+	left_lam_target = np.mean(left_lam_values)
+	peak_mask = (lam >= 4.245) & (lam <= 4.275) 
 
-	peak_val = np.max(peak_region_depths)	# 5. Calculate Height and the Scatter Error
-	baseline = (left_val + right_val) / 2
-	feature_height_ratio = (peak_val - baseline)
-	feature_height_ppm = (peak_val - baseline) * 1e6
+	peak_region_depths = transit_depth[peak_mask]
+	peak_x_values = lam[peak_mask]
+
+	peak_val = np.mean(peak_region_depths)
+	peak_x_value = np.mean(peak_x_values)
+	feature_height_ratio = (peak_val - left_val)
+	feature_height_ppm = (peak_val - left_val) * 1e6
 
 	peak_scatter_error_ppm = np.std(peak_region_depths) * 1e6
-
 	scale_height = (sc.k * Tp) / (mu * gp * sc.m_p)
 
 	A_H = feature_height_ratio * (Rs ** 2) / (2 * scale_height * Rp)
