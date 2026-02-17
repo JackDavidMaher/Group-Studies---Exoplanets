@@ -97,9 +97,9 @@ def bin_spectrum(wave, flux, model, error, bin_width=0.0225):
 
 def pressure(t):
     if t >= 600:
-        p = 0.018 * t - 17.8
+        p = 0.01 * t - 9
     elif t < 600:
-        p = -0.018 * t + 3.8
+        p = -0.01 * t + 3
     return p
 
 rowcount = 0 
