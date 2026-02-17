@@ -10,6 +10,15 @@ import shutil
 import sys
 import time
 s = time.process_time()
+
+#cloud pressure function
+def pressure(t):
+    if t>= 600:
+        p = 0.018*t - 17.8
+    elif t<600:
+        p = -0.018*t + 3.8
+    return p
+	
 # This section runs the SpectrumImageCleaner to remove any existing spectrums from the computer so dupliucates are not created
 script_dir = os.path.dirname(os.path.abspath(__file__))
 c_src = os.path.join(script_dir, 'SpectrumImageCleaner.c')
@@ -53,12 +62,14 @@ while rowCount < len(planetaryParameters):
 	Mp = planetaryParameters[rowCount][1]  # Planet mass in units of Earth masses
 	Tp = planetaryParameters[rowCount][2]  # Planet temperature in K
 	#mu = planetaryParameters[rowCount][3]  # Mean molecular weight in atomic mass units
-	Pcloud = planetaryParameters[rowCount][4]  # Pressure at top of cloud deck in bar
+	#Pcloud = planetaryParameters[rowCount][4]  # Pressure at top of cloud deck in bar
 	Pref = planetaryParameters[rowCount][5]   # Reference pressure in bar
 	Rs = planetaryParameters[rowCount][6]  # Stellar radius in units of Solar radii     
 	PName = planetNames[rowCount]  # Planet name (string)   
 	Rp *= const.R_earth.value   # Convert Rp from units of R_Earth to m
 	Rs *= const.R_sun.value     # Convert Rs from units of R_Sun to m
+
+	Pcloud = 10**pressure(Tp)
 	Pcloud *= 1.0e5             # Convert Pcloud from bar to Pa
 	Pref *= 1.0e5               # Convert Pref from bar to Pa
 	
