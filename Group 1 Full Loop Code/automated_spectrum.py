@@ -68,7 +68,14 @@ def bin_spectrum(wave, flux, model, error, bin_width=0.0225):
             binned_err.append(propagated_e)
             
     return np.array(binned_wave), np.array(binned_flux),np.array(binned_model), np.array(binned_err)
-	
+
+def pressure(t):
+    if t >= 600:
+        p = 0.018 * t - 17.8
+    elif t < 600:
+        p = -0.018 * t + 3.8
+    return p
+
 rowcount = 0 
 while rowcount < len(planetaryparameters):
 	## ----------------------------- LOAD PLANETARY PARAMETERS ------------------------------ ##
@@ -81,7 +88,7 @@ while rowcount < len(planetaryparameters):
 	Rs = planetaryparameters[rowcount][14] * const.R_sun.value      ## stellar radius in units of Solar radii * Solar radius in m    
 	
 	mu = 4.88 * sc.u                                       		   ## mean molecular weight in atomic mass units * atomic mass unit in kg
-	Pcloud = 100 * 1.0e5                                   		   ## pressure at top of cloud deck in Pa (100 bar) * convert to Pa
+	Pcloud = 10 ** pressure(Tp)                                  		   ## pressure at top of cloud deck in Pa (100 bar) * convert to Pa
 	Pref = 0.01 * 1.0e5                                   		   ## pressure at top of cloud deck in bar * convert to Pa 
 
 	## --------------------- ATOMOSPHERIC COMPOSOTION/ABSOBTION SPECTRA --------------------- ##
