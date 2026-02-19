@@ -1,0 +1,17 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{Y3S2 Group Project Explaining the Code}
+\author{jxm1517}
+\date{February 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Radiative Transfer}
+When forming a model absorption spectrum, our code takes the input planetary parameters and assumes a one-dimensional, isothermal atmosphere with a constant composition ratio, where pressure decreases with radial distance according to $p(r) \propto \frac{1}{r^2}$.
+The atmosphere is assumed to behave as an ideal gas, so the number density is calculated as $n = \frac{p}{kT}$. The cloud deck (at a specified pressure) is treated as a hard cutoff and is assumed to be 100\% opaque below that level.
+
+The opacity is calculated wavelength-by-wavelength from the cross-section files for each gas. These values are interpolated and then weighted by number density and mixing ratio before being combined to calculate the transit depth at each wavelength.
+\end{document}
