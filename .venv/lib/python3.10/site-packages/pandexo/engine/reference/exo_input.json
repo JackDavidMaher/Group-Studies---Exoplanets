@@ -1,0 +1,54 @@
+{
+    "calculation":"fml",
+    "url": null,
+    "url_err": null,
+    "star":{
+                "type" : "user, phoenix", 
+                "starpath" : "filename_star",
+                "w_unit": "Angs,um,nm,Hz,sec,cm",
+                "f_unit": "FLAM or W/m2/um or erg/s/cm2/Hz or Jy",
+                "mag": "stellar magnitude (hst only allows H mag inputs)",
+                "hmag": "H Band Magnitude",
+                "jmag": "J Band Magnitude",
+                "ref_wave": "1.25 for J, 1.60 for H, 2.22 for K",
+                "temp": "Kelvin",
+                "metal": "log[M/H]",
+                "logg": "log gravity cgs",
+                "radius":null,
+                "r_unit":null
+            },
+
+    "planet" :{
+	        "type": "user",
+            "exopath" : "filename_planet",
+            "w_unit": "Angs,um,nm,Hz,sec,cm",
+            "f_unit": "rp^2/r*^2 or fp/r*",
+            "transit_duration": "in days",
+            "planetname":null,
+            "td_unit":null,
+            "depth":null, 
+            "i":null, 
+            "ars":null, 
+            "period":null,
+            "ecc":null,
+            "w":null,
+            "temp":null,
+            "chem":null,
+            "cloud":null,
+            "radius":null,
+            "r_unit":null,
+            "mass":null,
+            "m_unit":null
+            },
+
+    "observation": {
+        "sat_level": null,
+        "sat_unit":"% full well or e",
+        "noccultations": 1,
+        "R": null,
+        "baseline": 1,
+        "baseline_unit":"frac", 
+        "target_acq":false,
+        "noise_floor":0.0
+        }
+}

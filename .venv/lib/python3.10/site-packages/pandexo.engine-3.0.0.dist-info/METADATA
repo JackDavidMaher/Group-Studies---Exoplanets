@@ -1,0 +1,29 @@
+Metadata-Version: 2.1
+Name: pandexo.engine
+Version: 3.0.0
+Home-page: https://github.com/natashabatalha/PandExo
+Author: Natasha Batalha at NASA Ames
+Author-email: natasha.e.batalha@nasa.gov
+License: GPL
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Astronomy
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+License-File: LICENSE
+Requires-Dist: pandeia.engine (==3.0)
+Requires-Dist: numpy
+Requires-Dist: bokeh (==3.0.2)
+Requires-Dist: tornado
+Requires-Dist: pandas
+Requires-Dist: joblib
+Requires-Dist: photutils
+Requires-Dist: astropy
+Requires-Dist: pysynphot
+Requires-Dist: sqlalchemy
+Requires-Dist: astroquery
+Requires-Dist: scipy
+Requires-Dist: batman-package
+

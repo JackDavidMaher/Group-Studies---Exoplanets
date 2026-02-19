@@ -9,12 +9,10 @@ import astropy.constants as const
 from scipy.interpolate import RegularGridInterpolator
 from dotenv import load_dotenv
 
-load_dotenv()
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 # This sets the environment variables for pandeia_refdata and PYSYN_CDBS to the values in the .env file, which should be set to the correct paths on your system. If these environment variables are already set in your system, this will not change them.
-os.environ['pandeia_refdata']=os.getenv('pandeia_refdata')
-os.environ['PYSYN_CDBS']=os.getenv('PYSYN_CDBS')
 
 ## CHANGE PATH IF NEED BE ##
 filedirectory = '40 planets data'   ##  name of folder just change number
@@ -69,7 +67,7 @@ with open(f'{PROJECT_DIR}/Data/40_planets_under_1000K05.02_15-55.csv', newline="
 	
 	planetaryparameters = np.array(data, dtype=float)
 
-def bin_spectrum(wave, flux, model, error, bin_width=0.0225):
+def bin_spectrum(wave, flux, model, error, bin_width = 0.0225):
     bins = np.arange(min(wave), max(wave), bin_width)
     binned_wave = []
     binned_flux = []
@@ -290,7 +288,7 @@ while rowcount < len(planetaryparameters):
 	
 	left_val = np.mean(left_depth_values)
 	left_lam_target = np.mean(left_lam_values)
-	peak_mask = (lam >= 4.245) & (lam <= 4.275) 
+	peak_mask = (lam >= 4.25) & (lam <= 4.28) 
 
 	peak_region_depths = transit_depth[peak_mask]
 	peak_x_values = lam[peak_mask]

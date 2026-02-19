@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+
+{% block body %}
+<head>
+    <meta charset="utf-8" />
+
+    <title>So sorry, something went wrong. </title>
+    <!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="row">
+    <div class="col-md-12">
+        <h1>Whoops!! Something went wrong.</h1>
+    </div>
+
+    <div class="col-md-3">
+        <img style="width: 100%;" src="{{ static_url('img/giphy-1.gif') }}">
+    </div>
+
+    <div class="col-md-9">
+        <div class="well">
+            <code style="white-space: pre-wrap;line-height: 15px;">
+                {% whitespace all %}{{ error_log }}{% whitespace oneline %}
+            </code>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <img style="width: 100%;" src="{{ static_url('img/giphy.gif') }}" />
+    </div>
+
+    <div class="col-md-9">
+        <p>Common mistakes include: </p>
+        <p>1. Hard Saturation resulted in a gang of NaNs</p>
+        <p>2. Your units are incorrect</p>
+        <p>3. File contained header or was not in two column format</p>
+        <p>4. Incomplete form input</p>
+        <br/>
+        <p>Go back to the form page, to edit your previous inputs.</p>
+        <p>Still can't figure it out? Try again. Still can't figure it out after that? Try one more time. Still can't figure it out on try number 3? Email a friend.
+            If that fails, email Natasha Batalha (batalha@stsci.edu).</p>
+    </div>
+</div>
+</body>
+{% end %}
