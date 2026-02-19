@@ -1,6 +1,7 @@
 GivenResources/Y3GS_Exoplanets_Generate_Transmission_Spectrum.ipynb
 GivenResources/Y3GS_Exoplanets_Transmission_Spectroscopy.ipynb
 .vscode/
+.venv/
 Group 1 Spectrum Code/SpectrumPlots/
 Group 1 JWST Code/JWSTSpectrumPlots/
 Notebooks/*
