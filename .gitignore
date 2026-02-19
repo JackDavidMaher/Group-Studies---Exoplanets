@@ -4,6 +4,9 @@ GivenResources/Y3GS_Exoplanets_Transmission_Spectroscopy.ipynb
 Group 1 Spectrum Code/SpectrumPlots/
 Group 1 JWST Code/JWSTSpectrumPlots/
 Notebooks/*
+!Notebooks/JDM/
 .env
 Group 1 Full Loop Code/40 planets data/
 Group 1 Full Loop Code/165 planets data/
+!Notebooks/JDM/RadiativeTransfer.pdf
+!Notebooks/JDM/RadiativeTransfer.tex
