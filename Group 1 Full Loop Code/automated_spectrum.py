@@ -15,7 +15,7 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 # This sets the environment variables for pandeia_refdata and PYSYN_CDBS to the values in the .env file, which should be set to the correct paths on your system. If these environment variables are already set in your system, this will not change them.
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '40 planets data'   ##  name of folder just change number
+filedirectory = '20 planets data'   ##  name of folder just change number
 
 xsec_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_xsec.npy')
 lam_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_lam.npy') * 1e6 # convert to microns
@@ -49,7 +49,7 @@ lam_heh2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_sect
 
 import pandexo.engine.justdoit as jdi 
 
-with open(f'{PROJECT_DIR}/Data/40_planets_under_1000K05.02_15-55.csv', newline="") as planetaryparametersfile:   ## Add name of file
+with open(f'{PROJECT_DIR}/Code/Data/20_top_f_h_planets17.02_16-44.csv', newline="") as planetaryparametersfile:   ## Add name of file
 	reader = csv.reader(planetaryparametersfile)
 	header = next(reader)
 	
@@ -95,9 +95,9 @@ def bin_spectrum(wave, flux, model, error, bin_width = 0.0225):
 
 def pressure(t):
     if t >= 600:
-        p = 0.01 * t - 9
+        p = 0.01 * t - 10
     elif t < 600:
-        p = -0.01 * t + 3
+        p = -0.01 * t + 2
     return p
 
 rowcount = 0 
@@ -302,6 +302,7 @@ while rowcount < len(planetaryparameters):
 	scale_height = (sc.k * Tp) / (mu * gp * sc.m_p)
 
 	A_H = feature_height_ratio * (Rs ** 2) / (2 * scale_height * Rp)
+	print(f'Estimated scale height for {planet_id}: {A_H:.2f} m')
 
 	## ----------------------------------- PANDEXO PLOTTING ----------------------------------- ##
 
