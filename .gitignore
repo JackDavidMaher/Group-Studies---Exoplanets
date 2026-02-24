@@ -1,7 +1,14 @@
 GivenResources/Y3GS_Exoplanets_Generate_Transmission_Spectrum.ipynb
 GivenResources/Y3GS_Exoplanets_Transmission_Spectroscopy.ipynb
-.venv/
 .vscode/
+# DO NOT REMOVE THE .venv/ ENTRY BELOW OR BAD THINGS WILL HAPPEN TO GOOD PEOPLE
+.venv/
 Group 1 Spectrum Code/SpectrumPlots/
 Group 1 JWST Code/JWSTSpectrumPlots/
 Notebooks/*
+!Notebooks/JDM/
+.env
+Group 1 Full Loop Code/40 planets data/
+Group 1 Full Loop Code/165 planets data/
+
+!Notebooks/Evelyn.ipynb

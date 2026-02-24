@@ -8,7 +8,14 @@ import os
 import subprocess
 import shutil
 import sys
+import time
+s = time.process_time()
 
+#cloud pressure function
+def pressure(t):
+    return 2.5e-5*(t**2) - (0.0275*t) + 4.5 
+    
+	
 # This section runs the SpectrumImageCleaner to remove any existing spectrums from the computer so dupliucates are not created
 script_dir = os.path.dirname(os.path.abspath(__file__))
 c_src = os.path.join(script_dir, 'SpectrumImageCleaner.c')
@@ -29,7 +36,7 @@ else:
 	if run_proc.stdout:
 		print(run_proc.stdout)
 
-
+e1 = time.process_time()
 
 with open("Group 1 Spectrum Code/PlanetaryParameters.csv", newline="") as PlanetaryParametersFile:
 	reader = csv.reader(PlanetaryParametersFile)
@@ -51,24 +58,26 @@ while rowCount < len(planetaryParameters):
 	Rp = planetaryParameters[rowCount][0]  # Planet radius in units of Earth radii
 	Mp = planetaryParameters[rowCount][1]  # Planet mass in units of Earth masses
 	Tp = planetaryParameters[rowCount][2]  # Planet temperature in K
-	mu = planetaryParameters[rowCount][3]  # Mean molecular weight in atomic mass units
-	Pcloud = planetaryParameters[rowCount][4]  # Pressure at top of cloud deck in bar
+	#mu = planetaryParameters[rowCount][3]  # Mean molecular weight in atomic mass units
+	#Pcloud = planetaryParameters[rowCount][4]  # Pressure at top of cloud deck in bar
 	Pref = planetaryParameters[rowCount][5]   # Reference pressure in bar
 	Rs = planetaryParameters[rowCount][6]  # Stellar radius in units of Solar radii     
 	PName = planetNames[rowCount]  # Planet name (string)   
 	Rp *= const.R_earth.value   # Convert Rp from units of R_Earth to m
 	Rs *= const.R_sun.value     # Convert Rs from units of R_Sun to m
+
+	Pcloud = 10**pressure(Tp)
 	Pcloud *= 1.0e5             # Convert Pcloud from bar to Pa
 	Pref *= 1.0e5               # Convert Pref from bar to Pa
-	mu *= sc.u                  # Convert mu from atomic mass units to kg
+	
 	#print(f"Processing planet with {header[0]}={Rp}, {header[1]}={Mp}, {header[2]}={Tp}, {header[3]}={mu}, {header[4]}={Pcloud}, {header[5]}={Pref}, {header[6]}={Rs}")
 	#print(rowCount,len(planetaryParameters))
 	rowCount=rowCount+1
 
-	P = np.logspace(2.0,-5,100) * 1.0e5
+	P = np.logspace(2.0,-9,100) * 1.0e5
 	T = Tp*np.ones_like(P)
 	n = P/(sc.k*T)
-	rho = mu*n
+	#rho = mu*n
 	gp = (sc.G * Mp * const.M_earth.value) / (Rp)**2
 	r = np.zeros_like(P)
 	g = np.zeros_like(P)
@@ -76,13 +85,6 @@ while rowCount < len(planetaryParameters):
 	r[i_Rp] = Rp
 	g[i_Rp] = gp
 
-	for i in range(i_Rp + 1, len(P)):
-		g[i] = g[i_Rp] * r[i_Rp] * r[i_Rp] / (r[i-1] * r[i-1])
-		r[i] = r[i-1] - ( sc.k * 0.5 * (T[i-1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i-1]) 
-
-	for i in range(i_Rp-1, -1, -1):
-		g[i] = g[i_Rp] * r[i_Rp] * r[i_Rp] / (r[i+1] * r[i+1])
-		r[i] = r[i+1] - ( sc.k * 0.5 * (T[i+1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i+1])
 	# First, set up a dictionary which will contain all the log mixing ratios, and input the abundances of all molecules except H2 and He
 	logX = dict()
 	logX['h2o'] = -1.1 #fixed compositions
@@ -120,6 +122,17 @@ while rowCount < len(planetaryParameters):
 
 	#print("The mean molecular weight is:", mu)
 
+	mu *= sc.u        # Convert mu from atomic mass units to kg
+
+	for i in range(i_Rp + 1, len(P)):
+		g[i] = g[i_Rp] * r[i_Rp] * r[i_Rp] / (r[i-1] * r[i-1])
+		r[i] = r[i-1] - ( sc.k * 0.5 * (T[i-1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i-1]) 
+
+	for i in range(i_Rp-1, -1, -1):
+		g[i] = g[i_Rp] * r[i_Rp] * r[i_Rp] / (r[i+1] * r[i+1])
+		r[i] = r[i+1] - ( sc.k * 0.5 * (T[i+1]+T[i]) / (mu * g[i]) ) * np.log(P[i]/P[i+1])
+	
+	
 	xsec_dict = dict()
 	lam_dict = dict()
 	P_dict = dict()
@@ -133,7 +146,17 @@ while rowCount < len(planetaryParameters):
 			lam_dict[mol] = np.load(f'GivenResources/cross_section_files/Cross_section_files/{mol}_lam.npy')*1e6 # convert to microns, wavelength
 			P_dict[mol] = np.power(10.0,np.load(f'GivenResources/cross_section_files/Cross_section_files/{mol}_P.npy')) # already in Pa, pressure
 			T_dict[mol] = np.load(f'GivenResources/cross_section_files/Cross_section_files/{mol}_T.npy') # temperature
-
+			
+			#adding 2 extra layers for lower pressures
+			new_layer = xsec_dict[mol][:,0,:]
+			new_layer = new_layer[:,np.newaxis,:]
+    
+            #adding to cross-sections
+            #adds it for 1e-3 to 1e-1 bar
+			xsec_dict[mol] = np.concatenate((new_layer, new_layer, new_layer, new_layer,xsec_dict[mol]), axis=1)
+    
+            #adds to pressure arrays
+			P_dict[mol] = np.insert(P_dict[mol],0,[1e-4,1e-3,1e-2,1e-1])
 
 	# H2-H2 and He-H2 molecule pairs cause absorption through a process called "collision-induced absorption". This data is wavelength- and temperature-dependent, but not pressure-dependent.
 	xsec_h2h2 = np.load('GivenResources/cross_section_files/Cross_section_files/h2_h2_xsec.npy')
@@ -230,3 +253,7 @@ while rowCount < len(planetaryParameters):
 	# Save the plot into the same output directory
 	plt.savefig(os.path.join(plots_dir, f'TransmissionSpectrum{safe_name}.png'))
 	plt.clf()
+e = time.process_time() # end time
+
+print("Elapsed time: ", e - s, "seconds")
+print("elapsed time without cleaning: ", e - e1, "seconds")

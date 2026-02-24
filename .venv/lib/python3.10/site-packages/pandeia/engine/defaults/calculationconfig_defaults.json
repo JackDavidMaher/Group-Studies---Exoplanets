@@ -1,0 +1,13 @@
+{
+    "noise": {
+        "crs": null,
+        "dark": null,
+        "excess": null,
+        "ffnoise": null,
+        "readnoise": null,
+        "scatter": null
+    },
+    "effects": {
+        "saturation": null
+    }
+}
