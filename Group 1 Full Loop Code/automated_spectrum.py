@@ -117,7 +117,7 @@ while rowcount < len(planetaryparameters):
 
 	## --------------------- ATOMOSPHERIC COMPOSOTION/ABSOBTION SPECTRA --------------------- ##
 
-	P = np.logspace(2.0,-9,100) * 1.0e5
+	P = np.logspace(2.0, -9.0, 500) * 1.0e5
 	T = Tp * np.ones_like(P)
 	n = P / (sc.k * T)
 	rho = mu * n
@@ -177,7 +177,7 @@ while rowcount < len(planetaryparameters):
 	T_dict = dict()
 	
 
-	lam = np.linspace(0.61,5.0,500)
+	lam = np.linspace(0.61,5.0,5000)
 
 	log_xsec_dict = dict()
 
@@ -359,7 +359,7 @@ while rowcount < len(planetaryparameters):
     'Wavelength_um': wavelength,
 	'Model_Depth': model_depth,
     'Transit_Depth': observed_depth,
-    'Error_ppm': errors})
+    'Error': errors})
 	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{planet_id}_JWST_results.csv', index=False)
 
 	print(f'-------------- Finished analysing planet: {planet_id} ----------')
