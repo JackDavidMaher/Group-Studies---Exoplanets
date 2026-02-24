@@ -345,7 +345,7 @@ while rowcount < len(planetaryparameters):
 	
 	plt.errorbar(wavelength, observed_depth, yerr=errors, fmt='s', color='royalblue', markersize=1, alpha=0.1, label=f'{planet_id} Simulated Data', zorder = 1)
 	plt.plot(wavelength, model_depth, color = 'firebrick', zorder = 2)      
-	plt.ylim([min(model_depth)*0.9, max(model_depth)*1.1])
+	plt.ylim([min(model_depth) * 0.9, max(model_depth) * 1.1])
 	plt.xlabel('Wavelength ($\mu$m)', fontsize=8)
 	plt.ylabel('Transit Depth (ppm)', fontsize=8)
 	plt.title(f'PandExo Simulated Observation for {planet_id}', fontsize=10)
