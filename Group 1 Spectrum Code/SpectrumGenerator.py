@@ -13,11 +13,8 @@ s = time.process_time()
 
 #cloud pressure function
 def pressure(t):
-    if t>= 600:
-        p = 0.01*t - 9
-    elif t<600:
-        p = -0.01*t + 3
-    return p
+    return 2.5e-5*(t**2) - (0.0275*t) + 4.5 
+    
 	
 # This section runs the SpectrumImageCleaner to remove any existing spectrums from the computer so dupliucates are not created
 script_dir = os.path.dirname(os.path.abspath(__file__))
