@@ -3,6 +3,8 @@ GivenResources/Y3GS_Exoplanets_Transmission_Spectroscopy.ipynb
 .vscode/
 # DO NOT REMOVE THE .venv/ ENTRY BELOW OR BAD THINGS WILL HAPPEN TO GOOD PEOPLE
 .venv/
+venv/
+*.venv/
 Group 1 Spectrum Code/SpectrumPlots/
 Group 1 JWST Code/JWSTSpectrumPlots/
 Notebooks/*
