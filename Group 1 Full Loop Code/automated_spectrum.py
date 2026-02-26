@@ -336,7 +336,7 @@ while rowcount < len(planetaryparameters):
 	exo_dict['observation']['sat_unit'] = '%' 
 	exo_dict['observation']['noise_floor'] = 0
 
-	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395H'], save_file = False, verbose = False)
+	result = jdi.run_pandexo(exo_dict, ['NIRISS SOSS F277W'], save_file = False, verbose = False)
 
 	wavelength = result['FinalSpectrum']['wave']
 	observed_depth = result['FinalSpectrum']['spectrum_w_rand'] # Data + Noise
