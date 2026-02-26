@@ -94,11 +94,7 @@ def bin_spectrum(wave, flux, model, error, bin_width = 0.0225):
     return np.array(binned_wave), np.array(binned_flux),np.array(binned_model), np.array(binned_err)
 
 def pressure(t):
-    if t >= 600:
-        p = 0.01 * t - 10
-    elif t < 600:
-        p = -0.01 * t + 2
-    return p
+    return 2.5e-5*(t**2) - (0.0275*t) + 4.5 
 
 rowcount = 0 
 while rowcount < len(planetaryparameters):
