@@ -273,7 +273,7 @@ while rowcount < len(planetaryparameters):
 	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum plots/planet_spectrum_{planet_id}.png')
 	plt.close()
 
-	np.savetxt(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{planet_id}.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
+	np.savetxt(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum txt files/{planet_id}_spectrum.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
 
 	## ------------------------------------- SCALE HEIGHT --------------------------------- ##
 
@@ -298,7 +298,6 @@ while rowcount < len(planetaryparameters):
 	scale_height = (sc.k * Tp) / (mu * gp * sc.m_p)
 
 	A_H = feature_height_ratio * (Rs ** 2) / (2 * scale_height * Rp)
-	print(f'Estimated scale height for {planet_id}: {A_H:.2f} m')
 
 	## ----------------------------------- PANDEXO PLOTTING ----------------------------------- ##
 
@@ -320,7 +319,7 @@ while rowcount < len(planetaryparameters):
 	exo_dict['planet']['transit_duration'] = planetaryparameters[rowcount][8]    ## transit duration in days
 	exo_dict['planet']['td_unit'] = 'h'
 	exo_dict['planet']['type'] = 'user'                                          ## 'user' for user defined spectrum or 'constant' for constant spectrum
-	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{planet_id}.txt'       ## path to user defined spectrum file
+	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/{filedirectory}/spectrum txt files/{planet_id}_spectrum.txt'       ## path to user defined spectrum file
 	exo_dict['planet']['f_unit'] = 'rp^2/r*^2'                                   ## flux unit for user defined spectrum
 	exo_dict['planet']['w_unit'] = 'um'                                          ## wavelength unit for user defined spectra
 	
@@ -348,7 +347,7 @@ while rowcount < len(planetaryparameters):
 	plt.xlim(2.8,5)
 	plt.legend(frameon=True)
 	plt.grid(True, alpha=0.3)
-	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST plots/{planet_id}_JWST_simulated_observation.png')
+	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST plots/{planet_id}_JWSTsimulation.png')
 	plt.close()
 
 	df = pd.DataFrame({
@@ -356,7 +355,7 @@ while rowcount < len(planetaryparameters):
 	'Model_Depth': model_depth,
     'Transit_Depth': observed_depth,
     'Error': errors})
-	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{planet_id}_JWST_results.csv', index=False)
+	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{planet_id}_pandexoresults.csv', index=False)
 
 	print(f'-------------- Finished analysing planet: {planet_id} ----------')
 	rowcount += 1
