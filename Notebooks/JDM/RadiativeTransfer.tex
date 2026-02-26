@@ -1,20 +1,119 @@
 \documentclass{article}
-\usepackage{graphicx} % Required for inserting images
-
+\usepackage{graphicx}
 \title{Y3S2 Group Project Explaining the Code}
-\author{jxm1517}
+\author{Jack D. Maher (jxm1517)}
 \date{February 2026}
-
 \begin{document}
-
 \maketitle
-
 \section{Radiative Transfer}
-When forming a model absorption spectrum, our code takes the input planetary parameters and assumes a one-dimensional, isothermal atmosphere with a constant composition ratio, where pressure decreases with radial distance according to $p(r) \propto \frac{1}{r^2}$.
-The atmosphere is assumed to behave as an ideal gas, so the number density is calculated as $n = \frac{p}{kT}$. 
+When forming a model absorption spectrum, our script takes the input planetary parameters and assumes a one-dimensional, isothermal atmosphere with a constant composition ratio, where pressure decreases with radial distance according to $p(r) \propto \frac{1}{r^2}$.
+The atmosphere is assumed to behave as an ideal gas, so the number density is calculated as $n = \frac{p}{kT}$.
 The cloud deck (at a specified pressure) is treated as a hard cutoff and is assumed to be 100\% opaque below that level.
 
 The opacity is calculated wavelength-by-wavelength from the cross-section files for each gas. 
 These values are interpolated and then weighted by number density and mixing ratio before being combined to calculate the transit depth at each wavelength.
+
+When the planet passes in front of the star, light passes through different layers of the atmosphere or hits the opaque interior (clouds or solid surface). Along each light ray, the radiative transfer equation is $
+I_\lambda(s) = I_{\lambda,0}\,e^{-\tau_\lambda(s)}$,
+where $I_{\lambda,0}$ is the incoming specific intensity from the star, $s$ is the distance along the ray, and $\tau_\lambda$ is the optical depth.
+
+We therefore use the planetary parameters and cross sections to change the wavelength-dependent optical depth, $ \mathrm{d}\tau_\lambda = \kappa_\lambda\,\rho\, \mathrm{d} s = \sum_i n_i\,\sigma_{\lambda, i}\, \mathrm{d} s $, where $\kappa_\lambda$ is the mass absorption coefficient, $\rho$ is the density, $n_i$ is the number density of species $i$ and $\sigma_{\lambda, i}$ is its absorption cross section.
+
+
+The code represents the atmosphere on a 1D pressure grid spanning from $P \simeq 100\,\mathrm{Pa}$ down to $P \simeq 10^{-9}\,\mathrm{Pa}$.  For each pressure level $P_j$ it assigns a temperature $T_j$ ($T_j = T_p P_j$) and number density ($ n_j = \frac{P_j}{k_\mathrm{B} T_j}$)
+\newline
+\newline
+To know how far rays travel through each layer, the code also needs the radius $r$ associated with each pressure level.  This is obtained by integrating the equation of hydrostatic equilibrium,
+
+\[
+\frac{\mathrm{d}P}{\mathrm{d}r} = -\rho g = - \frac{\mu n g}{},
+\]
+
+where $g(r)$ is the gravitational acceleration and $\mu$ is the mean molecular weight.  Using the ideal-gas relation $P = n k_\mathrm{B} T$ and rewriting in terms of $\ln P$ gives
+
+\[
+\mathrm{d}r = -\frac{k_\mathrm{B} T}{\mu g}\,\mathrm{d}\ln P.
+\]
+
+The notebook assumes that almost all of the planet's mass lies below the region probed in transmission, so the gravitational acceleration is taken to scale as
+
+\[
+g(r) = g_\mathrm{ref} \left(\frac{r_\mathrm{ref}}{r}\right)^2,
+\]
+
+where $g_\mathrm{ref}$ is the surface gravity at a reference pressure $P_\mathrm{ref}$ and $r_\mathrm{ref}=R_\mathrm{p}$ is the corresponding radius.  Starting from this reference point, the code steps outwards and inwards in $\ln P$ using the discretised version of the above expression to build up arrays $r(P_j)$ and $g(P_j)$.  This converts the original pressure grid into a radial grid of atmospheric ``shells'' surrounding a core of radius $R_\mathrm{p}$.
+
+
+The composition of the atmosphere is specified in terms of logarithmic mixing ratios $\log_{10} X_i$ for each molecule.  In the default example, the user sets an H$_2$O abundance and the code fills the remaining fraction of the gas with H$_2$ and He in a fixed ratio chosen to mimic a solar-composition background.  From these mixing ratios, the mean molecular weight
+
+\[
+\mu = \sum_i X_i\,m_i
+\]
+
+is recomputed, ensuring that the hydrostatic structure is internally consistent with the specified chemistry.
+
+The absorption cross sections $\sigma_{\lambda,i}(P,T)$ are precomputed on a 3D grid of wavelength, pressure and temperature and stored on disk as $\log_{10}\sigma$.  The code loads these arrays and uses a trilinear interpolator (\texttt{RegularGridInterpolator}) to evaluate the cross sections at the pressures and temperatures of the model atmosphere and at the wavelengths of interest.  For each wavelength $\lambda_k$ and layer $j$, the total absorption per unit path length is then assembled as
+
+\[
+\sum_i n_{i,j} \, \sigma_{\lambda_k,i}(P_j,T_j)
+	= n_j \sum_i X_i\,\sigma_{\lambda_k,i}(P_j,T_j).
+\]
+
+In addition to line absorption from individual molecules (e.g. H$_2$O), the notebook also includes collision-induced absorption (CIA) from H$_2$--H$_2$ and He--H$_2$ pairs.  Because CIA is a two-body process, the contribution to $\tau_\lambda$ scales as $n_i^2$ rather than $n_i$, and the corresponding term in the opacity sum is of the form
+
+\[
+\tau_{\lambda}^{\mathrm{CIA}} \propto n_j^2\,X_{\mathrm{H_2}}^2\,\sigma_{\lambda}^{\mathrm{H_2-H_2}} + n_j^2\,X_{\mathrm{H_2}}X_{\mathrm{He}}\,\sigma_{\lambda}^{\mathrm{He-H_2}}.
+\]
+
+After these contributions are combined, the code holds a 2D array \verb|opacity[k,j]| which represents $\sum_i n_{i,j}\sigma_{\lambda_k,i}$ for each wavelength and pressure level.
+
+
+Given the radial grid $r_j$ and the opacity at each layer, the next step is to compute the slant optical depth $\tau_\lambda(r)$ along rays that graze the planet at different impact parameters $r$.  For a ray with minimum radius $r_i$, the path length through layers at larger radii is set geometrically by
+
+\[
+s(r) = \sqrt{r^2 - r_i^2},
+\]
+
+so that the path length across a shell between $r_j$ and $r_{j+1}$ is $\Delta s_j = s(r_{j+1}) - s(r_j)$.  The code loops over the layers above each impact parameter and approximates the slant optical depth by a discrete sum
+
+\[
+\tau_\lambda(r_i) \approx \sum_j \left[\frac{\mathrm{opacity}_{k,j} + \mathrm{opacity}_{k,j+1}}{2}\right] \Delta s_j,
+\]
+
+where the opacity is averaged between adjacent layers to obtain a trapezoidal estimate.  If the pressure at a given radius exceeds the prescribed cloud-top pressure $P_\mathrm{cloud}$, a very large additional optical depth (e.g. $\tau\sim 10^3$) is added to mimic an effectively opaque cloud deck.
+
+The fraction of stellar light transmitted along that ray is $e^{-\tau_\lambda(r_i)}$.  To convert this to an effective transit radius, the code follows the standard annulus-integration formula for transmission spectroscopy:
+
+\[
+\Delta_\lambda = \frac{\pi R_\mathrm{p}^2 + 2\int_{r>R_\mathrm{p}}  r \bigl[1 - e^{-\tau_\lambda(r)}\bigr]\,\mathrm{d}r 
+	- 2\int_{r<R_\mathrm{p}} r\,e^{-\tau_\lambda(r)}\,\mathrm{d}r}{\pi R_\mathrm{s}^2}.
+\]
+
+The first term represents the area of an opaque disk of radius $R_\mathrm{p}$.  The second term adds on the contribution from atmospheric annuli above this radius, weighted by the fraction of light they block.  The third term subtracts light that is able to leak through layers that are geometrically inside $R_\mathrm{p}$ but not completely opaque because of the finite optical depth.  In practice these integrals are again evaluated numerically using the discrete $r_i$ grid and the precomputed values of $e^{-\tau_\lambda(r_i)}$.
+
+The result is a model transit depth $\Delta_\lambda$ as a function of wavelength, which the notebook plots in parts-per-million (ppm).  Changing the planetary radius, mass, temperature, mean molecular weight, or cloud-top pressure directly affects the computed scale height and optical depths, and therefore changes the amplitude and shape of the spectral features.
+
+
+The second notebook, \texttt{Y3GS\_Exoplanets\_Transmission\_Spectroscopy.ipynb}, implements a simplified or ``toy'' transmission spectrum for GJ~1214~b.  Instead of explicitly computing $\tau_\lambda(r)$ from detailed cross sections, it assumes that at each wavelength the atmosphere is opaque up to some number of scale heights $N_\mathrm{scale}(\lambda)$ above a reference radius $R_{\mathrm{p},0}$.  The corresponding planetary radius is written as
+
+\[
+R_\mathrm{p}(\lambda) = R_{\mathrm{p},0} + N_\mathrm{scale}(\lambda) H,
+\]
+
+where the atmospheric scale height $H$ is given by
+
+\[
+H = \frac{k_\mathrm{B} T}{\mu m_\mathrm{p} g}.
+\]
+
+Here $T$ is an assumed isothermal temperature (taken to be close to the planet's equilibrium temperature), $\mu$ is the mean molecular weight in units of the proton mass $m_\mathrm{p}$, and $g$ is the surface gravity evaluated at $R_{\mathrm{p},0}$.  Once $R_\mathrm{p}(\lambda)$ is specified, the transit depth follows directly from the area ratio
+
+\[
+\Delta_\lambda = \left(\frac{R_\mathrm{p}(\lambda)}{R_\ast}\right)^2.
+\]
+
+In this toy model, all of the complicated wavelength dependence of the true opacity is compressed into the function $N_\mathrm{scale}(\lambda)$, which is defined analytically to mimic a few broad molecular bands.  A gray cloud deck is introduced by imposing a minimum value of $N_\mathrm{scale}$: if the atmosphere would otherwise be transparent at a given wavelength, the cloud ensures that the planet still appears at least $N_\mathrm{cloud}$ scale heights larger than $R_{\mathrm{p},0}$.  Varying the parameters $\mu$ and $N_\mathrm{cloud}$ in the interactive widget shows the qualitative effects of heavier atmospheres and higher clouds: increasing $\mu$ reduces $H$ and hence the amplitude of features, while increasing $N_\mathrm{cloud}$ flattens the spectrum by obscuring deeper, more wavelength-dependent layers.
+
+Taken together, the two notebooks provide both a detailed, physically motivated computation of radiative transfer in transmission geometry and a more intuitive, scale-height based picture.  The full radiative-transfer code illustrates how line-by-line opacities and geometry are combined to obtain $\tau_\lambda(r)$, while the toy model highlights the dominant dependencies of the transit spectrum on scale height, composition, and clouds.
 
 \end{document}

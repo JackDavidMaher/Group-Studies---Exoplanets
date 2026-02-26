@@ -2,7 +2,7 @@ PWD /home/jackdavidmaher/Physics/Year 3/Group-Studies---Exoplanets/Notebooks/JDM
 INPUT /usr/share/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
 INPUT /home/jackdavidmaher/Physics/Year 3/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex
-OUTPUT RadiativeTransfer.log
+OUTPUT %OUTDIR%/RadiativeTransfer.log
 INPUT /usr/share/texmf-dist/tex/latex/base/article.cls
 INPUT /usr/share/texmf-dist/tex/latex/base/article.cls
 INPUT /usr/share/texmf-dist/tex/latex/base/size10.clo
@@ -24,10 +24,10 @@ INPUT /usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def
 INPUT /usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def
 INPUT /usr/share/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-INPUT ./RadiativeTransfer.aux
-INPUT ./RadiativeTransfer.aux
-INPUT RadiativeTransfer.aux
-OUTPUT RadiativeTransfer.aux
+INPUT %OUTDIR%/RadiativeTransfer.aux
+INPUT %OUTDIR%/RadiativeTransfer.aux
+INPUT %OUTDIR%/RadiativeTransfer.aux
+OUTPUT %OUTDIR%/RadiativeTransfer.aux
 INPUT /usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -48,10 +48,10 @@ INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-OUTPUT RadiativeTransfer.pdf
+OUTPUT %OUTDIR%/RadiativeTransfer.pdf
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
-INPUT RadiativeTransfer.aux
+INPUT %OUTDIR%/RadiativeTransfer.aux
 INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb

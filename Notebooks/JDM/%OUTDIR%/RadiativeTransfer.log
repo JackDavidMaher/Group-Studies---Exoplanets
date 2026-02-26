@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2026.2.19)  26 FEB 2026 14:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2026.2.19)  24 FEB 2026 17:47
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -45,7 +45,7 @@ File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count270
 \l__pdf_internal_box=\box52
-) (./RadiativeTransfer.aux)
+) (%OUTDIR%/RadiativeTransfer.aux)
 \openout1 = `RadiativeTransfer.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
@@ -92,23 +92,18 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 9.
 
-Underfull \hbox (badness 10000) in paragraph at lines 23--27
-
- []
-
-
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (14.77658pt too wide) in paragraph at lines 68--69
+Overfull \hbox (14.77658pt too wide) in paragraph at lines 72--73
 []\OT1/cmr/m/n/10 After these con-tri-bu-tions are com-bined, the code holds a 2D ar-ray [][]\OT1/cmtt/m/n/10 opacity[k,j]
  []
 
 
 
 [2]
-Overfull \hbox (11.22693pt too wide) in paragraph at lines 97--98
+Overfull \hbox (11.22693pt too wide) in paragraph at lines 101--102
 []\OT1/cmr/m/n/10 The sec-ond note-book, \OT1/cmtt/m/n/10 Y3GS[]Exoplanets[]Transmission[]Spectroscopy.ipynb\OT1/cmr/m/n/10 ,
  []
 
@@ -116,22 +111,22 @@ Overfull \hbox (11.22693pt too wide) in paragraph at lines 97--98
 
 [3]
 
-[4] (./RadiativeTransfer.aux)
+[4] (%OUTDIR%/RadiativeTransfer.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 1301 strings out of 475128
- 21199 string characters out of 5766034
- 412564 words of memory out of 5000000
+ 1302 strings out of 475128
+ 21258 string characters out of 5766034
+ 413564 words of memory out of 5000000
  24341 multiletter control sequences out of 15000+600000
  562645 words of font info for 49 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  57i,6n,65p,942b,199s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on RadiativeTransfer.pdf (4 pages, 166100 bytes).
+Output written on %OUTDIR%/RadiativeTransfer.pdf (4 pages, 165269 bytes).
 PDF statistics:
  82 PDF objects out of 1000 (max. 8388607)
  49 compressed objects within 1 object stream
