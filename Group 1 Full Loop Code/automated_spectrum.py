@@ -113,7 +113,7 @@ while rowcount < len(planetaryparameters):
 
 	## --------------------- ATOMOSPHERIC COMPOSOTION/ABSOBTION SPECTRA --------------------- ##
 
-	P = np.logspace(2.0, -9.0, 500) * 1.0e5
+	P = np.logspace(2.0, -9.0, 200) * 1.0e5
 	T = Tp * np.ones_like(P)
 	n = P / (sc.k * T)
 	rho = mu * n
@@ -269,7 +269,7 @@ while rowcount < len(planetaryparameters):
 	plt.xlabel('Wavelength (um)')
 	plt.ylabel('Transit Depth (ppm)')
 	plt.title(f'[{planet_id}] Transmission Spectrum')
-	plt.xlim([2.8,5.0])
+	plt.xlim([0.6,2.8])
 	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum plots/planet_spectrum_{planet_id}.png')
 	plt.close()
 
@@ -324,7 +324,7 @@ while rowcount < len(planetaryparameters):
 	exo_dict['planet']['w_unit'] = 'um'                                          ## wavelength unit for user defined spectra
 	
 	## Error and observation parameters
-	exo_dict['observation']['baseline'] = 2.0 
+	exo_dict['observation']['baseline'] = 1.0 
 	exo_dict['observation']['baseline_unit'] = 'frac'
 	exo_dict['observation']['noccultations'] = 1                                 ## number of transits (changed to match num_tran=10 in plot)
 	exo_dict['observation']['sat_level'] = 80                                    ## saturation level in percent of full well 
@@ -344,7 +344,7 @@ while rowcount < len(planetaryparameters):
 	plt.xlabel('Wavelength ($\mu$m)', fontsize=8)
 	plt.ylabel('Transit Depth (ppm)', fontsize=8)
 	plt.title(f'PandExo Simulated Observation for {planet_id}', fontsize=10)
-	plt.xlim(2.8,5)
+	plt.xlim(0.6, 2.8)
 	plt.legend(frameon=True)
 	plt.grid(True, alpha=0.3)
 	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST plots/{planet_id}_JWSTsimulation.png')
