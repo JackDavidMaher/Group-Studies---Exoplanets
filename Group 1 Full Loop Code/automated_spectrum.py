@@ -7,7 +7,7 @@ import scipy.constants as sc
 import matplotlib.pyplot as plt
 import astropy.constants as const
 from scipy.interpolate import RegularGridInterpolator
-from dotenv import load_dotenv
+
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
