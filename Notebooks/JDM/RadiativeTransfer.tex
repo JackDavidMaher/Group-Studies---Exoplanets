@@ -83,5 +83,4 @@ The fraction of light transmitted along that ray is $e^{-\tau_\lambda(r_i)}$.  T
 The first term represents the area of an opaque disk of radius $ R_\mathrm{p} $.  The second term adds on the contribution from atmospheric annuli above this radius, weighted by the fraction of light they block.  The third term subtracts light that is able to leak through layers that are geometrically inside $ R_\mathrm{p} $ but not completely opaque because of the finite optical depth.  In practice these integrals are again evaluated numerically using the discrete $ r_i $ grid and the precomputed values of $ e^{-\tau_\lambda(r_i)} $.
 
 The result is a model transit depth $ \Delta_\lambda $ as a function of wavelength, which the notebook plots in parts-per-million (ppm).  Changing the planetary radius, mass, temperature, mean molecular weight, or cloud-top pressure directly affects the computed scale height and optical depths, and therefore changes the amplitude and shape of the spectral features.
-
 \end{document}
