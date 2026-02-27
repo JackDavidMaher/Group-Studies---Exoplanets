@@ -49,7 +49,7 @@ lam_heh2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_sect
 
 import pandexo.engine.justdoit as jdi 
 
-with open(f'{PROJECT_DIR}/Code/Data/19_top_f_h_planets17.02_16-44.csv', newline="") as planetaryparametersfile:   ## Add name of file
+with open(f'{PROJECT_DIR}/Code/Data/23_planet_list_26.02_16-41.csv', newline="") as planetaryparametersfile:   ## Add name of file
 	reader = csv.reader(planetaryparametersfile)
 	header = next(reader)
 	
