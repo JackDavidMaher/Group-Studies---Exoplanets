@@ -7,7 +7,7 @@ import scipy.constants as sc
 import matplotlib.pyplot as plt
 import astropy.constants as const
 from scipy.interpolate import RegularGridInterpolator
-from dotenv import load_dotenv
+
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -49,7 +49,7 @@ lam_heh2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_sect
 
 import pandexo.engine.justdoit as jdi 
 
-with open(f'{PROJECT_DIR}/Code/Data/20_top_f_h_planets17.02_16-44.csv', newline="") as planetaryparametersfile:   ## Add name of file
+with open(f'{PROJECT_DIR}/Code/Data/19_top_f_h_planets17.02_16-44.csv', newline="") as planetaryparametersfile:   ## Add name of file
 	reader = csv.reader(planetaryparametersfile)
 	header = next(reader)
 	
@@ -113,7 +113,7 @@ while rowcount < len(planetaryparameters):
 
 	## --------------------- ATOMOSPHERIC COMPOSOTION/ABSOBTION SPECTRA --------------------- ##
 
-	P = np.logspace(2.0, -9.0, 500) * 1.0e5
+	P = np.logspace(2.0, -9.0, 200) * 1.0e5
 	T = Tp * np.ones_like(P)
 	n = P / (sc.k * T)
 	rho = mu * n
@@ -269,11 +269,11 @@ while rowcount < len(planetaryparameters):
 	plt.xlabel('Wavelength (um)')
 	plt.ylabel('Transit Depth (ppm)')
 	plt.title(f'[{planet_id}] Transmission Spectrum')
-	plt.xlim([2.8,5.0])
+	plt.xlim([0.6,2.8])
 	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum plots/planet_spectrum_{planet_id}.png')
 	plt.close()
 
-	np.savetxt(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{planet_id}.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
+	np.savetxt(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum txt files/{planet_id}_spectrum.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
 
 	## ------------------------------------- SCALE HEIGHT --------------------------------- ##
 
@@ -298,7 +298,6 @@ while rowcount < len(planetaryparameters):
 	scale_height = (sc.k * Tp) / (mu * gp * sc.m_p)
 
 	A_H = feature_height_ratio * (Rs ** 2) / (2 * scale_height * Rp)
-	print(f'Estimated scale height for {planet_id}: {A_H:.2f} m')
 
 	## ----------------------------------- PANDEXO PLOTTING ----------------------------------- ##
 
@@ -320,19 +319,19 @@ while rowcount < len(planetaryparameters):
 	exo_dict['planet']['transit_duration'] = planetaryparameters[rowcount][8]    ## transit duration in days
 	exo_dict['planet']['td_unit'] = 'h'
 	exo_dict['planet']['type'] = 'user'                                          ## 'user' for user defined spectrum or 'constant' for constant spectrum
-	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/{filedirectory}/spectrum txt files/planet_spectrum_{planet_id}.txt'       ## path to user defined spectrum file
+	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/{filedirectory}/spectrum txt files/{planet_id}_spectrum.txt'       ## path to user defined spectrum file
 	exo_dict['planet']['f_unit'] = 'rp^2/r*^2'                                   ## flux unit for user defined spectrum
 	exo_dict['planet']['w_unit'] = 'um'                                          ## wavelength unit for user defined spectra
 	
 	## Error and observation parameters
-	exo_dict['observation']['baseline'] = 2.0 
+	exo_dict['observation']['baseline'] = 1.0 
 	exo_dict['observation']['baseline_unit'] = 'frac'
 	exo_dict['observation']['noccultations'] = 1                                 ## number of transits (changed to match num_tran=10 in plot)
 	exo_dict['observation']['sat_level'] = 80                                    ## saturation level in percent of full well 
 	exo_dict['observation']['sat_unit'] = '%' 
 	exo_dict['observation']['noise_floor'] = 0
 
-	result = jdi.run_pandexo(exo_dict, ['NIRSpec G395H'], save_file = False, verbose = False)
+	result = jdi.run_pandexo(exo_dict, ['NIRISS SOSS F277W'], save_file = False, verbose = False)
 
 	wavelength = result['FinalSpectrum']['wave']
 	observed_depth = result['FinalSpectrum']['spectrum_w_rand'] # Data + Noise
@@ -345,10 +344,10 @@ while rowcount < len(planetaryparameters):
 	plt.xlabel('Wavelength ($\mu$m)', fontsize=8)
 	plt.ylabel('Transit Depth (ppm)', fontsize=8)
 	plt.title(f'PandExo Simulated Observation for {planet_id}', fontsize=10)
-	plt.xlim(2.8,5)
+	plt.xlim(0.6, 2.8)
 	plt.legend(frameon=True)
 	plt.grid(True, alpha=0.3)
-	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST plots/{planet_id}_JWST_simulated_observation.png')
+	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST plots/{planet_id}_JWSTsimulation.png')
 	plt.close()
 
 	df = pd.DataFrame({
@@ -356,7 +355,7 @@ while rowcount < len(planetaryparameters):
 	'Model_Depth': model_depth,
     'Transit_Depth': observed_depth,
     'Error': errors})
-	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{planet_id}_JWST_results.csv', index=False)
+	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{planet_id}_pandexoresults.csv', index=False)
 
 	print(f'-------------- Finished analysing planet: {planet_id} ----------')
 	rowcount += 1
