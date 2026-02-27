@@ -15,7 +15,7 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 # This sets the environment variables for pandeia_refdata and PYSYN_CDBS to the values in the .env file, which should be set to the correct paths on your system. If these environment variables are already set in your system, this will not change them.
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '23 planets data'   ##  name of folder just change number
+filedirectory = '18 planets data'   ##  name of folder just change number
 
 xsec_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_xsec.npy')
 lam_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_lam.npy') * 1e6 # convert to microns
@@ -49,7 +49,7 @@ lam_heh2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_sect
 
 import pandexo.engine.justdoit as jdi 
 
-with open(f'{PROJECT_DIR}/Code/Data/23_planet_list_26.02_16-41.csv', newline="") as planetaryparametersfile:   ## Add name of file
+with open(f'{PROJECT_DIR}/Code/Data/18_planet_list_27.02_17-17.csv', newline="") as planetaryparametersfile:   ## Add name of file
 	reader = csv.reader(planetaryparametersfile)
 	header = next(reader)
 	
@@ -333,12 +333,11 @@ while rowcount < len(planetaryparameters):
 
 	result = jdi.run_pandexo(exo_dict, ['NIRISS SOSS F277W'], save_file = False, verbose = False)
 
-	print(planetaryparameters[rowcount][1])
-
 	wavelength = result['FinalSpectrum']['wave']
 	observed_depth = result['FinalSpectrum']['spectrum_w_rand'] # Data + Noise
 	model_depth = result['FinalSpectrum']['spectrum']          # The smooth model
-	errors = (result['FinalSpectrum']['error_w_floor']) / np.sqrt(planetaryparameters[rowcount][1])   # The 1-sigma uncertainties
+	errors = result['FinalSpectrum']['error_w_floor']          # The 1-sigma uncertainties
+	# errors = (result['FinalSpectrum']['error_w_floor']) / np.sqrt(planetaryparameters[rowcount][1])   # The 1-sigma uncertainties
 	
 	plt.errorbar(wavelength, observed_depth, yerr=errors, fmt='s', color='royalblue', markersize=1, alpha=0.1, label=f'{planet_id} Simulated Data', zorder = 1)
 	plt.plot(wavelength, model_depth, color = 'firebrick', zorder = 2)      
