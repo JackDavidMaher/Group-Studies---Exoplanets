@@ -15,7 +15,7 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 # This sets the environment variables for pandeia_refdata and PYSYN_CDBS to the values in the .env file, which should be set to the correct paths on your system. If these environment variables are already set in your system, this will not change them.
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '23 planets data'   ##  name of folder just change number
+filedirectory = 'GJ Test'   ##  name of folder just change number
 
 xsec_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_xsec.npy')
 lam_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_lam.npy') * 1e6 # convert to microns
