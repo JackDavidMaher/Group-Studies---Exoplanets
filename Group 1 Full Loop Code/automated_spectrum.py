@@ -326,19 +326,18 @@ while rowcount < len(planetaryparameters):
 	## Error and observation parameters
 	exo_dict['observation']['baseline'] = 1.0 
 	exo_dict['observation']['baseline_unit'] = 'frac'
-	exo_dict['observation']['noccultations'] = planetaryparameters[rowcount][1]  ## number of transits (changed to match num_tran=10 in plot)
+	exo_dict['observation']['noccultations'] = 1  ## number of transits (changed to match num_tran=10 in plot)
 	exo_dict['observation']['sat_level'] = 80                                    ## saturation level in percent of full well 
 	exo_dict['observation']['sat_unit'] = '%' 
 	exo_dict['observation']['noise_floor'] = 0
 
 	result = jdi.run_pandexo(exo_dict, ['NIRISS SOSS F277W'], save_file = False, verbose = False)
 
-	print(planetaryparameters[rowcount][1])
-
 	wavelength = result['FinalSpectrum']['wave']
 	observed_depth = result['FinalSpectrum']['spectrum_w_rand'] # Data + Noise
 	model_depth = result['FinalSpectrum']['spectrum']          # The smooth model
-	errors = (result['FinalSpectrum']['error_w_floor']) / np.sqrt(planetaryparameters[rowcount][1])   # The 1-sigma uncertainties
+	errors = result['FinalSpectrum']['error_w_floor']          # The 1-sigma uncertainties
+	# errors = (result['FinalSpectrum']['error_w_floor']) / np.sqrt(planetaryparameters[rowcount][1])   # The 1-sigma uncertainties
 	
 	plt.errorbar(wavelength, observed_depth, yerr=errors, fmt='s', color='royalblue', markersize=1, alpha=0.1, label=f'{planet_id} Simulated Data', zorder = 1)
 	plt.plot(wavelength, model_depth, color = 'firebrick', zorder = 2)      
