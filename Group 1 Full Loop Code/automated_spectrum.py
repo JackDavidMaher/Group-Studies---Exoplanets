@@ -15,7 +15,7 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 # This sets the environment variables for pandeia_refdata and PYSYN_CDBS to the values in the .env file, which should be set to the correct paths on your system. If these environment variables are already set in your system, this will not change them.
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '20 planets data'   ##  name of folder just change number
+filedirectory = '23 planets data'   ##  name of folder just change number
 
 xsec_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_xsec.npy')
 lam_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_lam.npy') * 1e6 # convert to microns
@@ -102,10 +102,10 @@ while rowcount < len(planetaryparameters):
 	planet_id = planetnames[rowcount]                               ## planet name   
 	print(f"------------ Analysing Planet: {planet_id} --------------")
 	
-	Rp = planetaryparameters[rowcount][3] * const.R_earth.value     ## planet radius in units of Earth radii * Earth radius in m
-	Mp = planetaryparameters[rowcount][2]                           ## planet mass in units of Earth masses
-	Tp = planetaryparameters[rowcount][39]                          ## planet temperature in K
-	Rs = planetaryparameters[rowcount][14] * const.R_sun.value      ## stellar radius in units of Solar radii * Solar radius in m    
+	Rp = planetaryparameters[rowcount][4] * const.R_earth.value     ## planet radius in units of Earth radii * Earth radius in m
+	Mp = planetaryparameters[rowcount][3]                           ## planet mass in units of Earth masses
+	Tp = planetaryparameters[rowcount][40]                          ## planet temperature in K
+	Rs = planetaryparameters[rowcount][15] * const.R_sun.value      ## stellar radius in units of Solar radii * Solar radius in m    
 	
 	mu = 4.88 * sc.u                                       		   ## mean molecular weight in atomic mass units * atomic mass unit in kg
 	Pcloud = 10 ** pressure(Tp) * 1.0e5                                  		   ## pressure at top of cloud deck in Pa (100 bar) * convert to Pa
@@ -305,18 +305,18 @@ while rowcount < len(planetaryparameters):
     
 	## star dictionary
 	exo_dict['star']['type'] = 'phoenix'     
-	exo_dict['star']['temp'] = planetaryparameters[rowcount][16]                 ## temperature in K 
-	exo_dict['star']['metal'] = planetaryparameters[rowcount][18]                ## metallacity as log Fe/H
-	exo_dict['star']['logg'] = planetaryparameters[rowcount][22]                 ## log gravity cgs
-	exo_dict['star']['mag'] = planetaryparameters[rowcount][20]                  ## star J magnitude
+	exo_dict['star']['temp'] = planetaryparameters[rowcount][17]                 ## temperature in K 
+	exo_dict['star']['metal'] = planetaryparameters[rowcount][19]                ## metallacity as log Fe/H
+	exo_dict['star']['logg'] = planetaryparameters[rowcount][23]                 ## log gravity cgs
+	exo_dict['star']['mag'] = planetaryparameters[rowcount][21]                  ## star J magnitude
 	exo_dict['star']['ref_wave'] = 1.25
-	exo_dict['star']['radius'] = planetaryparameters[rowcount][14]               ## radius of the star in solar radii
+	exo_dict['star']['radius'] = planetaryparameters[rowcount][15]               ## radius of the star in solar radii
 	exo_dict['star']['r_unit'] = 'R_sun'
 
     ## planet dictionary
-	exo_dict['planet']['radius'] = planetaryparameters[rowcount][3]              ## radius of the planet in earth radii        
+	exo_dict['planet']['radius'] = planetaryparameters[rowcount][4]              ## radius of the planet in earth radii        
 	exo_dict['planet']['r_unit'] = 'R_earth'                                    
-	exo_dict['planet']['transit_duration'] = planetaryparameters[rowcount][8]    ## transit duration in days
+	exo_dict['planet']['transit_duration'] = planetaryparameters[rowcount][9]    ## transit duration in days
 	exo_dict['planet']['td_unit'] = 'h'
 	exo_dict['planet']['type'] = 'user'                                          ## 'user' for user defined spectrum or 'constant' for constant spectrum
 	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/{filedirectory}/spectrum txt files/{planet_id}_spectrum.txt'       ## path to user defined spectrum file
@@ -326,17 +326,19 @@ while rowcount < len(planetaryparameters):
 	## Error and observation parameters
 	exo_dict['observation']['baseline'] = 1.0 
 	exo_dict['observation']['baseline_unit'] = 'frac'
-	exo_dict['observation']['noccultations'] = 1                                 ## number of transits (changed to match num_tran=10 in plot)
+	exo_dict['observation']['noccultations'] = planetaryparameters[rowcount][1]  ## number of transits (changed to match num_tran=10 in plot)
 	exo_dict['observation']['sat_level'] = 80                                    ## saturation level in percent of full well 
 	exo_dict['observation']['sat_unit'] = '%' 
 	exo_dict['observation']['noise_floor'] = 0
 
 	result = jdi.run_pandexo(exo_dict, ['NIRISS SOSS F277W'], save_file = False, verbose = False)
 
+	print(planetaryparameters[rowcount][1])
+
 	wavelength = result['FinalSpectrum']['wave']
 	observed_depth = result['FinalSpectrum']['spectrum_w_rand'] # Data + Noise
 	model_depth = result['FinalSpectrum']['spectrum']          # The smooth model
-	errors = result['FinalSpectrum']['error_w_floor']   # The 1-sigma uncertainties
+	errors = (result['FinalSpectrum']['error_w_floor']) / np.sqrt(planetaryparameters[rowcount][1])   # The 1-sigma uncertainties
 	
 	plt.errorbar(wavelength, observed_depth, yerr=errors, fmt='s', color='royalblue', markersize=1, alpha=0.1, label=f'{planet_id} Simulated Data', zorder = 1)
 	plt.plot(wavelength, model_depth, color = 'firebrick', zorder = 2)      
@@ -354,7 +356,8 @@ while rowcount < len(planetaryparameters):
     'Wavelength_um': wavelength,
 	'Model_Depth': model_depth,
     'Transit_Depth': observed_depth,
-    'Error': errors})
+    'Error': errors,
+	'Num_Transits': planetaryparameters[rowcount][1]})
 	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{planet_id}_pandexoresults.csv', index=False)
 
 	print(f'-------------- Finished analysing planet: {planet_id} ----------')
