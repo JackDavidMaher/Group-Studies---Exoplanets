@@ -327,7 +327,7 @@ while rowcount < len(planetaryparameters):
 	exo_dict['observation']['baseline'] = 1.0 
 	exo_dict['observation']['baseline_unit'] = 'frac'
 	exo_dict['observation']['noccultations'] = planetaryparameters[rowcount][1]  ## number of transits (changed to match num_tran=10 in plot)
-	exo_dict['observation']['sat_level'] = 80                                    ## saturation level in percent of full well 
+	exo_dict['observation']['sat_level'] = 100                                    ## saturation level in percent of full well 
 	exo_dict['observation']['sat_unit'] = '%' 
 	exo_dict['observation']['noise_floor'] = 0
 
@@ -338,6 +338,8 @@ while rowcount < len(planetaryparameters):
 	model_depth = result['FinalSpectrum']['spectrum']          # The smooth model
 	errors = result['FinalSpectrum']['error_w_floor']          # The 1-sigma uncertainties
 	# errors = (result['FinalSpectrum']['error_w_floor']) / np.sqrt(planetaryparameters[rowcount][1])   # The 1-sigma uncertainties
+
+	saturation_2d = result['PandeiaOutTrans']['2d']['saturation']        # 2D saturation array (1 if saturated, 0 if not)
 	
 	plt.errorbar(wavelength, observed_depth, yerr=errors, fmt='s', color='royalblue', markersize=1, alpha=0.1, label=f'{planet_id} Simulated Data', zorder = 1)
 	plt.plot(wavelength, model_depth, color = 'firebrick', zorder = 2)      
@@ -349,6 +351,15 @@ while rowcount < len(planetaryparameters):
 	plt.legend(frameon=True)
 	plt.grid(True, alpha=0.3)
 	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST plots/{planet_id}_JWSTsimulation.png')
+	plt.close()
+
+	plt.figure(figsize=(10, 4))
+	plt.imshow(saturation_2d, origin='lower', aspect='auto', cmap='magma')
+	plt.colorbar(label='Saturation Flag')
+	plt.title('2D Saturation Profile')
+	plt.xlabel('Spectral Pixel')
+	plt.ylabel('Spatial Pixel')
+	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST saturation plots/{planet_id}_JWSTsaturation.png')
 	plt.close()
 
 	df = pd.DataFrame({
