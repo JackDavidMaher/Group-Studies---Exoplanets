@@ -52,7 +52,10 @@ CIA occurs when two colliding molecules form an interaction with an induced dipo
 This is important in H$_2$-rich atmospheres because H$_2$ has no permanent dipole and therefore weak intrinsic rotational-vibrational line absorption on its own. 
 Unlike narrow molecular line features, CIA typically contributes a broad continuum-like opacity that fills spectral windows between molecular bands.
 [INSERT REFERENCE FOR CIA CROSS SECTIONS]
-Because CIA is a two-body process, the contribution to $\tau_\lambda$ scales as $n_i^2$ rather than $n_i$. $ \tau_{\lambda}^{\mathrm{CIA}} \propto n_j^2\,X_{\mathrm{H_2}}^2\,\sigma_{\lambda}^{\mathrm{H_2-H_2}} + n_j^2\,X_{\mathrm{H_2}}X_{\mathrm{He}}\,\sigma_{\lambda}^{\mathrm{He-H_2}} $.
+Because CIA is a two-body process, the contribution to $\tau_\lambda$ scales as $n_i^2$ rather than $n_i$. 
+\begin{equation} 
+	\tau_{\lambda}^{\mathrm{CIA}} \propto n_j^2\,X_{\mathrm{H_2}}^2\,\sigma_{\lambda}^{\mathrm{H_2-H_2}} + n_j^2\,X_{\mathrm{H_2}}X_{\mathrm{He}}\,\sigma_{\lambda}^{\mathrm{He-H_2}}
+\end{equation}
 
 After these contributions are combined, the code holds a 2D array opacity[k,j] which represents $\sum_i n_{i,j}\sigma_{\lambda_k,i}$ for each wavelength and pressure level.
 
