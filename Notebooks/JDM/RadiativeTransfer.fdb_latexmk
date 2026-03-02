@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1772320876.66005 "/home/jackdavidmaher/Physics/Year 3/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" "RadiativeTransfer.pdf" "RadiativeTransfer" 1772320877.08333 0
-  "/home/jackdavidmaher/Physics/Year 3/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" 1772320875.83761 7805 6f3793b00c77d442ebd64248504e386c ""
+["pdflatex"] 1772455877.15014 "/home/jackdavidmaher/Physics/Year 3/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" "RadiativeTransfer.pdf" "RadiativeTransfer" 1772455877.75711 0
+  "/home/jackdavidmaher/Physics/Year 3/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" 1772455876.70274 7805 6f3793b00c77d442ebd64248504e386c ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1767555874 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1767555874 1524 4414a8315f39513458b80dfc63bff03a ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm" 1767555874 1512 f21f83efb36853c0b70002322c1ab3ad ""
@@ -65,11 +65,11 @@
   "/usr/share/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1767555874 9714 ba3194bd52c8499b3f1e3eb91d409670 ""
   "/usr/share/texmf-dist/tex/latex/url/url.sty" 1767555874 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1767555874 42087 b0f9697c952c8f5a8eede4134282cb0d ""
-  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1771518756 5011229 9e2a3c024ce745caba5794ee5595b35e ""
-  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1771519331 2060251 c3445fa78c9e3b5c36b0b7e9452f8344 ""
-  "RadiativeTransfer.aux" 1772320877.03693 1967 400b8d9fb25a4f35db6c3d04d64b5203 "pdflatex"
-  "RadiativeTransfer.out" 1772320877.03693 1384 7fb635fa5342ecfd1b790fb047b71f94 "pdflatex"
-  "RadiativeTransfer.tex" 1772320875.83761 7805 6f3793b00c77d442ebd64248504e386c ""
+  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1772443503 5011229 9e2a3c024ce745caba5794ee5595b35e ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1772443492 2060276 d9ed13e23b327f5482cf8cc2ae50415b ""
+  "RadiativeTransfer.aux" 1772455877.68274 1967 400b8d9fb25a4f35db6c3d04d64b5203 "pdflatex"
+  "RadiativeTransfer.out" 1772455877.68274 1384 7fb635fa5342ecfd1b790fb047b71f94 "pdflatex"
+  "RadiativeTransfer.tex" 1772455876.70274 7805 6f3793b00c77d442ebd64248504e386c ""
   (generated)
   "RadiativeTransfer.aux"
   "RadiativeTransfer.log"
