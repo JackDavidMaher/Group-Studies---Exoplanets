@@ -16,6 +16,7 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 
 ## CHANGE PATH IF NEED BE ##
 filedirectory = '18 planets data'   ##  name of folder just change number
+planet_list =  '/Code/Data/18_planet_list_27.02_17-17.csv'                   ## Relative path to the csv file containing the planetary parameters, which should be in the same format as the 18_planet_list_27.02_17-17.csv file provided in the GivenResources folder. If your csv file is in a different location, change this path accordingly.
 
 base_out_dir = f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}'
 
@@ -64,7 +65,7 @@ lam_heh2 = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_sect
 
 import pandexo.engine.justdoit as jdi 
 
-with open(f'{PROJECT_DIR}/Code/Data/18_planet_list_27.02_17-17.csv', newline="") as planetaryparametersfile:   ## Add name of file
+with open(f'{PROJECT_DIR}{planet_list}', newline="") as planetaryparametersfile:   ## Add name of file
 	reader = csv.reader(planetaryparametersfile)
 	header = next(reader)
 	
@@ -122,7 +123,7 @@ while rowcount < len(planetaryparameters):
 	Tp = planetaryparameters[rowcount][40]                          ## planet temperature in K
 	Rs = planetaryparameters[rowcount][15] * const.R_sun.value      ## stellar radius in units of Solar radii * Solar radius in m    
 	
-	mu = 4.88 * sc.u                                       		   ## mean molecular weight in atomic mass units * atomic mass unit in kg
+	mu = 4.877216515255627 * sc.u                                       		   ## mean molecular weight in atomic mass units * atomic mass unit in kg
 	Pcloud = 10 ** pressure(Tp) * 1.0e5                                  		   ## pressure at top of cloud deck in Pa (100 bar) * convert to Pa
 	Pref = 0.01 * 1.0e5                                   		   ## pressure at top of cloud deck in bar * convert to Pa 
 
@@ -292,14 +293,14 @@ while rowcount < len(planetaryparameters):
 
 	## ------------------------------------- SCALE HEIGHT --------------------------------- ##
 
-	left_mask = (lam >= 4.1) & (lam <= 4.15)
+	left_mask = (lam >= 1.24) & (lam <= 1.29)
 	
 	left_depth_values = transit_depth[left_mask]
 	left_lam_values = lam[left_mask]
 	
 	left_val = np.mean(left_depth_values)
 	left_lam_target = np.mean(left_lam_values)
-	peak_mask = (lam >= 4.25) & (lam <= 4.28) 
+	peak_mask = (lam >= 1.38) & (lam <= 1.41) 
 
 	peak_region_depths = transit_depth[peak_mask]
 	peak_x_values = lam[peak_mask]
