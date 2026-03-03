@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import astropy.constants as const
 from scipy.interpolate import RegularGridInterpolator
 
-
+##------------------------------ SETTING UP DIRECTORIES AND ENVIRONMENT VARIABLES ------------------------------ ##
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
@@ -16,6 +16,21 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 
 ## CHANGE PATH IF NEED BE ##
 filedirectory = '18 planets data'   ##  name of folder just change number
+
+base_out_dir = f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}'
+
+# List all the subfolders your script needs to save files into
+folders_to_create = [
+    f'{base_out_dir}/spectrum plots',
+    f'{base_out_dir}/spectrum txt files',
+    f'{base_out_dir}/JWST plots',
+    f'{base_out_dir}/JWST saturation plots',
+    f'{base_out_dir}/pandexo csv files'
+]
+
+# Loop through and create each directory
+for folder in folders_to_create:
+    os.makedirs(folder, exist_ok=True)
 
 xsec_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_xsec.npy')
 lam_h2o = np.load(f'{PROJECT_DIR}/GivenResources/cross_section_files/Cross_section_files/h2o_lam.npy') * 1e6 # convert to microns
