@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1772553753.53449 "/home/jackdavidmaher/Physics/Year 3/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" "RadiativeTransfer.pdf" "RadiativeTransfer" 1772553753.96036 0
-  "/home/jackdavidmaher/Physics/Year 3/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" 1772553753.31457 7809 a5a44291150de36bbe2d79d7a6553cb4 ""
+["pdflatex"] 1772732368.24831 "/home/jackdavidmaher/Physics/Year 3/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" "RadiativeTransfer.pdf" "RadiativeTransfer" 1772732368.81021 0
+  "/home/jackdavidmaher/Physics/Year 3/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" 1772732367.97472 7899 2a1ca6755232eb9979e863d6615705b6 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1772460543 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1772460543 1524 4414a8315f39513458b80dfc63bff03a ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm" 1772460543 1512 f21f83efb36853c0b70002322c1ab3ad ""
@@ -63,9 +63,9 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1772460543 43569 fd570f2fa160877d211e859f687312ba ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1772546423 5085451 773befd8d74fc386f1381e035d865540 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1772546406 2378839 0b2788e760a996ada7ba4d8acf517b97 ""
-  "RadiativeTransfer.aux" 1772553753.91457 1967 400b8d9fb25a4f35db6c3d04d64b5203 "pdflatex"
-  "RadiativeTransfer.out" 1772553753.91557 1384 7fb635fa5342ecfd1b790fb047b71f94 "pdflatex"
-  "RadiativeTransfer.tex" 1772553753.31457 7809 a5a44291150de36bbe2d79d7a6553cb4 ""
+  "RadiativeTransfer.aux" 1772732368.71973 1967 400b8d9fb25a4f35db6c3d04d64b5203 "pdflatex"
+  "RadiativeTransfer.out" 1772732368.71973 1384 7fb635fa5342ecfd1b790fb047b71f94 "pdflatex"
+  "RadiativeTransfer.tex" 1772732367.97472 7899 2a1ca6755232eb9979e863d6615705b6 ""
   (generated)
   "RadiativeTransfer.aux"
   "RadiativeTransfer.log"

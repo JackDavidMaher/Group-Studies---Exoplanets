@@ -9,8 +9,8 @@
 \section{Pre-processing}
 \subsection{Atmospheric Assumptions and Composition}
 \label{Section:AtmosphericAssumptions}
-When forming a model absorption spectrum, our script takes the input planetary parameters and assumes a one-dimensional, isothermal atmosphere with a constant composition ratio, where pressure decreases with radial distance according to $p(r) \propto \frac{1}{r^2}$.
-The atmosphere is assumed to behave as an ideal gas, so the number density is calculated as $n = \frac{p}{kT}$.
+When forming a model absorption spectrum, our script takes the input planetary parameters and assumes a one-dimensional, isothermal atmosphere with a constant composition ratio, where pressure $(P)$ decreases with radial distance $(r)$ according to $P(r) \propto \frac{1}{r^2}$.
+The atmosphere is assumed to behave as an ideal gas, so the number density $(n)$ is calculated as $n = \frac{P}{k_B T}$ where $k_B$ is the Boltzmann constant and $T$ is the temperature.
 The cloud deck (at a specified pressure) is treated as a hard cutoff and is assumed to be 100\% opaque below that level.
 \newline
 The opacity is calculated wavelength-by-wavelength from the cross-section files for each gas. 
@@ -45,11 +45,11 @@ From this reference point, the script steps outwards and inwards in even steps o
 This converts the original pressure grid into a grid of atmospheric shells.
 \newline
 \newline
-We then set the composition of the atmosphere in terms of logarithmic mixing ratios $\log_{10} X_i$ for each molecule. 
+We then set the composition of the atmosphere in terms of logarithmic mixing ratios $(\log_{10} X_i)$ for each molecule. 
 This was calculated as a typical sub-neptune's composition [INSERT REFERENCE]. 
 From these mixing ratios, the mean molecular weight is calculated as $\mu = \sum_i X_i\,m_i$.
 
-The absorption cross sections $\sigma_{\lambda,i}(P,T)$ are loaded as arrays and we use RegularGridInterpolator to evaluate the cross sections at the pressures and temperatures of the model atmosphere and at the wavelengths of interest. 
+The absorption cross sections $(\sigma_{\lambda,i}(P,T))$ are loaded as arrays and we use RegularGridInterpolator to evaluate the cross sections at the pressures and temperatures of the model atmosphere and at the wavelengths of interest. 
 For each wavelength $\lambda_k$ and layer $j$, the total absorption per unit path length is then calulated as $ \sum_i n_{i,j} \, \sigma_{\lambda_k,i}(P_j,T_j) = n_j \sum_i X_i\,\sigma_{\lambda_k,i}(P_j,T_j) $.
 
 \subsection{Collision-Induced Absorption}
