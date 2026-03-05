@@ -15,10 +15,10 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 # This sets the environment variables for pandeia_refdata and PYSYN_CDBS to the values in the .env file, which should be set to the correct paths on your system. If these environment variables are already set in your system, this will not change them.
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '18 planets data'   ##  name of folder just change number
-planet_list =  '/Code/Data/18_planet_list_27.02_17-17.csv'                   ## Relative path to the csv file containing the planetary parameters, which should be in the same format as the 18_planet_list_27.02_17-17.csv file provided in the GivenResources folder. If your csv file is in a different location, change this path accordingly.
+filedirectory = '39 planets data'   ##  name of folder just change number
+planet_list =  '/Data/500-700_low error.csv'                   ## Relative path to the csv file containing the planetary parameters, which should be in the same format as the 18_planet_list_27.02_17-17.csv file provided in the GivenResources folder. If your csv file is in a different location, change this path accordingly.
 
-base_out_dir = f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}'
+base_out_dir = f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}'
 
 # List all the subfolders your script needs to save files into
 folders_to_create = [
@@ -286,10 +286,10 @@ while rowcount < len(planetaryparameters):
 	plt.ylabel('Transit Depth (ppm)')
 	plt.title(f'[{planet_id}] Transmission Spectrum')
 	plt.xlim([0.6,2.8])
-	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum plots/planet_spectrum_{planet_id}.png')
+	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}/spectrum plots/planet_spectrum_{planet_id}.png')
 	plt.close()
 
-	np.savetxt(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/spectrum txt files/{planet_id}_spectrum.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
+	np.savetxt(f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}/spectrum txt files/{planet_id}_spectrum.txt', np.column_stack((lam, transit_depth)), header='Wavelength(micron)   Transit_Depth(rp^2/r*^2)', fmt='%10.6f')
 
 	## ------------------------------------- SCALE HEIGHT --------------------------------- ##
 
@@ -335,7 +335,7 @@ while rowcount < len(planetaryparameters):
 	exo_dict['planet']['transit_duration'] = planetaryparameters[rowcount][9]    ## transit duration in days
 	exo_dict['planet']['td_unit'] = 'h'
 	exo_dict['planet']['type'] = 'user'                                          ## 'user' for user defined spectrum or 'constant' for constant spectrum
-	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/{filedirectory}/spectrum txt files/{planet_id}_spectrum.txt'       ## path to user defined spectrum file
+	exo_dict['planet']['exopath'] = f'Group 1 Full Loop Code/data/{filedirectory}/spectrum txt files/{planet_id}_spectrum.txt'       ## path to user defined spectrum file
 	exo_dict['planet']['f_unit'] = 'rp^2/r*^2'                                   ## flux unit for user defined spectrum
 	exo_dict['planet']['w_unit'] = 'um'                                          ## wavelength unit for user defined spectra
 	
@@ -366,7 +366,7 @@ while rowcount < len(planetaryparameters):
 	plt.xlim(0.6, 2.8)
 	plt.legend(frameon=True)
 	plt.grid(True, alpha=0.3)
-	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST plots/{planet_id}_JWSTsimulation.png')
+	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}/JWST plots/{planet_id}_JWSTsimulation.png')
 	plt.close()
 
 	plt.figure(figsize=(10, 4))
@@ -375,7 +375,7 @@ while rowcount < len(planetaryparameters):
 	plt.title('2D Saturation Profile')
 	plt.xlabel('Spectral Pixel')
 	plt.ylabel('Spatial Pixel')
-	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/JWST saturation plots/{planet_id}_JWSTsaturation.png')
+	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}/JWST saturation plots/{planet_id}_JWSTsaturation.png')
 	plt.close()
 
 	df = pd.DataFrame({
@@ -384,7 +384,7 @@ while rowcount < len(planetaryparameters):
     'Transit_Depth': observed_depth,
     'Error': errors,
 	'Num_Transits': planetaryparameters[rowcount][1]})
-	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/{filedirectory}/pandexo csv files/{planet_id}_pandexoresults.csv', index=False)
+	df.to_csv(f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}/pandexo csv files/{planet_id}_pandexoresults.csv', index=False)
 
 	print(f'-------------- Finished analysing planet: {planet_id} ----------')
 	rowcount += 1
