@@ -29,21 +29,28 @@ We therefore use the planetary parameters and cross sections to change the wavel
 
 \subsection{Pressure Grid and Hydrostatic Equilibrium}
 \label{Section:Hydrostatic}
-The code represents the atmosphere on a 1D pressure grid from $P = 10^{-4}\,\mathrm{Pa}$ to $P = 10^{7}\,\mathrm{Pa}$.  For each pressure level $P_j$ it assigns a temperature $T_j = T_p P_j$ and number density $ n_j = \frac{P_j}{k_\mathrm{B} T_j}$
+The code represents the atmosphere on a 1D pressure grid from $P = 10^{-4}\,\mathrm{Pa}$ to $P = 10^{7}\,\mathrm{Pa}$. 
+For each pressure level $P_j$ it assigns a temperature $T_j = T_p P_j$ and number density $ n_j = \frac{P_j}{k_\mathrm{B} T_j}$
 \newline
 \newline
-To know how far rays travel through each layer, we need to find the radius $r$ at each pressure level. This is obtained by integrating the equation of hydrostatic equilibrium, $ \frac{\mathrm{d}P}{\mathrm{d}r}$, which leads to the expression in equation \ref{Eq: dr = dlnP}.
+To know how far rays travel through each layer, we need to find the radius $r$ at each pressure level.
+This is obtained by integrating the equation of hydrostatic equilibrium, $ \frac{\mathrm{d}P}{\mathrm{d}r}$, which leads to the expression in equation \ref{Eq: dr = dlnP}.
 \begin{equation} 
 	dr = - \frac{k_BT}{\mu g}dlnP
 	\label{Eq: dr = dlnP}
 \end{equation}
 
-The calculation of gravity relative to radius can stated as $ g(r) = g_\mathrm{ref} \left(\frac{r_\mathrm{ref}}{r}\right)^2 $, where $g_\mathrm{ref}$ is the surface gravity at a reference pressure $P_\mathrm{ref}$ and $r_\mathrm{ref}=R_\mathrm{p}$ is the corresponding radius.  From this reference point, the script steps outwards and inwards in even steps of $\ln P$ to build the arrays $r(P_j)$ and $g(P_j)$.  This converts the original pressure grid into a grid of atmospheric shells.
+The calculation of gravity relative to radius can stated as $ g(r) = g_\mathrm{ref} \left(\frac{r_\mathrm{ref}}{r}\right)^2 $, where $g_\mathrm{ref}$ is the surface gravity at a reference pressure $P_\mathrm{ref}$ and $r_\mathrm{ref}=R_\mathrm{p}$ is the corresponding radius. 
+From this reference point, the script steps outwards and inwards in even steps of $\ln P$ to build the arrays $r(P_j)$ and $g(P_j)$. 
+This converts the original pressure grid into a grid of atmospheric shells.
 \newline
 \newline
-We then set the composition of the atmosphere in terms of logarithmic mixing ratios $\log_{10} X_i$ for each molecule. This was calculated as a typical sub-neptune's composition [INSERT REFERENCE]. From these mixing ratios, the mean molecular weight is calculated as $\mu = \sum_i X_i\,m_i$.
+We then set the composition of the atmosphere in terms of logarithmic mixing ratios $\log_{10} X_i$ for each molecule. 
+This was calculated as a typical sub-neptune's composition [INSERT REFERENCE]. 
+From these mixing ratios, the mean molecular weight is calculated as $\mu = \sum_i X_i\,m_i$.
 
-The absorption cross sections $\sigma_{\lambda,i}(P,T)$ are loaded as arrays and we use RegularGridInterpolator to evaluate the cross sections at the pressures and temperatures of the model atmosphere and at the wavelengths of interest.  For each wavelength $\lambda_k$ and layer $j$, the total absorption per unit path length is then calulated as $ \sum_i n_{i,j} \, \sigma_{\lambda_k,i}(P_j,T_j) = n_j \sum_i X_i\,\sigma_{\lambda_k,i}(P_j,T_j) $.
+The absorption cross sections $\sigma_{\lambda,i}(P,T)$ are loaded as arrays and we use RegularGridInterpolator to evaluate the cross sections at the pressures and temperatures of the model atmosphere and at the wavelengths of interest. 
+For each wavelength $\lambda_k$ and layer $j$, the total absorption per unit path length is then calulated as $ \sum_i n_{i,j} \, \sigma_{\lambda_k,i}(P_j,T_j) = n_j \sum_i X_i\,\sigma_{\lambda_k,i}(P_j,T_j) $.
 
 \subsection{Collision-Induced Absorption}
 \label{Section:CIA}
@@ -62,7 +69,8 @@ After these contributions are combined, the code holds a 2D array opacity[k,j] w
 
 \subsection{Slant Optical Depth and Transit Integration}
 \label{Section:SlantAndTransit}
-Given the radial grid $r_j$ and the opacity at each layer, the next part of our script finds the optical depth $\tau_\lambda(r)$ along rays that pass through the planet at different layers $r$.  For a ray with minimum radius $r_i$, the path length through layers at larger radii is set by equation \ref{Eq:PathLength} so that the path length across a shell between $r_j$ and $r_{j+1}$ is $\Delta s_j = s(r_{j+1}) - s(r_j)$.
+Given the radial grid $r_j$ and the opacity at each layer, the next part of our script finds the optical depth $\tau_\lambda(r)$ along rays that pass through the planet at different layers $r$. 
+For a ray with minimum radius $r_i$, the path length through layers at larger radii is set by equation \ref{Eq:PathLength} so that the path length across a shell between $r_j$ and $r_{j+1}$ is $\Delta s_j = s(r_{j+1}) - s(r_j)$.
 \begin{equation}
 s(r) = \sqrt{r^2 - r_i^2}
 \label{Eq:PathLength}
@@ -83,7 +91,11 @@ The fraction of light transmitted along that ray is $e^{-\tau_\lambda(r_i)}$.  T
 	\label{Eq:TransitDepth}
 \end{equation}
 
-The first term represents the area of an opaque disk of radius $ R_\mathrm{p} $.  The second term adds on the contribution from atmospheric annuli above this radius, weighted by the fraction of light they block.  The third term subtracts light that is able to leak through layers that are geometrically inside $ R_\mathrm{p} $ but not completely opaque because of the finite optical depth.  In practice these integrals are again evaluated numerically using the discrete $ r_i $ grid and the precomputed values of $ e^{-\tau_\lambda(r_i)} $.
+The first term represents the area of an opaque disk of radius $ R_\mathrm{p} $.  The second term adds on the contribution from atmospheric annuli above this radius, weighted by the fraction of light they block. 
+The third term subtracts light that is able to leak through layers that are geometrically inside $ R_\mathrm{p} $ but not completely opaque because of the finite optical depth. 
+In practice these integrals are again evaluated numerically using the discrete $ r_i $ grid and the precomputed values of $ e^{-\tau_\lambda(r_i)} $.
 
-The result is a model transit depth $ \Delta_\lambda $ as a function of wavelength, which the notebook plots in parts-per-million (ppm).  Changing the planetary radius, mass, temperature, mean molecular weight, or cloud-top pressure directly affects the computed scale height and optical depths, and therefore changes the amplitude and shape of the spectral features.
+The result is a model transit depth $ \Delta_\lambda $ as a function of wavelength, which the notebook plots in parts-per-million (ppm).  
+Changing the planetary radius, mass, temperature, mean molecular weight, or cloud-top pressure directly affects the computed scale height and optical depths, and therefore changes the amplitude and shape of the spectral features.
+
 \end{document}

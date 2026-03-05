@@ -66,15 +66,9 @@ INPUT /usr/share/texmf-dist/tex/generic/bitset/bitset.sty
 INPUT /usr/share/texmf-dist/tex/generic/bitset/bitset.sty
 INPUT /usr/share/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 INPUT /usr/share/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
-INPUT /usr/share/texmf-dist/tex/generic/atbegshi/atbegshi.sty
-INPUT /usr/share/texmf-dist/tex/latex/base/atbegshi-ltx.sty
-INPUT /usr/share/texmf-dist/tex/latex/base/atbegshi-ltx.sty
 INPUT /usr/share/texmf-dist/tex/latex/hyperref/hpdftex.def
 INPUT /usr/share/texmf-dist/tex/latex/hyperref/hpdftex.def
 INPUT /usr/share/texmf-dist/tex/latex/hyperref/hpdftex.def
-INPUT /usr/share/texmf-dist/tex/latex/atveryend/atveryend.sty
-INPUT /usr/share/texmf-dist/tex/latex/base/atveryend-ltx.sty
-INPUT /usr/share/texmf-dist/tex/latex/base/atveryend-ltx.sty
 INPUT /usr/share/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 INPUT /usr/share/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 INPUT /usr/share/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
