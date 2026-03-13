@@ -15,8 +15,8 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 # This sets the environment variables for pandeia_refdata and PYSYN_CDBS to the values in the .env file, which should be set to the correct paths on your system. If these environment variables are already set in your system, this will not change them.
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '39 planets data'   ##  name of folder just change number
-planet_list =  '/Data/500-700_low error.csv'                   ## Relative path to the csv file containing the planetary parameters, which should be in the same format as the 18_planet_list_27.02_17-17.csv file provided in the GivenResources folder. If your csv file is in a different location, change this path accordingly.
+filedirectory = '14 planets data'   ##  name of folder just change number
+planet_list =  '/Data/500_700_refined.csv'                   ## Relative path to the csv file containing the planetary parameters, which should be in the same format as the 18_planet_list_27.02_17-17.csv file provided in the GivenResources folder. If your csv file is in a different location, change this path accordingly.
 
 base_out_dir = f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}'
 
