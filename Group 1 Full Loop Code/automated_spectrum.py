@@ -15,8 +15,8 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 # This sets the environment variables for pandeia_refdata and PYSYN_CDBS to the values in the .env file, which should be set to the correct paths on your system. If these environment variables are already set in your system, this will not change them.
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '14 planets data'   ##  name of folder just change number
-planet_list =  '/Data/500_700_refined.csv'                   ## Relative path to the csv file containing the planetary parameters, which should be in the same format as the 18_planet_list_27.02_17-17.csv file provided in the GivenResources folder. If your csv file is in a different location, change this path accordingly.
+filedirectory = '17 planets data'   ##  name of folder just change number
+planet_list =  '/Code/Data/17_planet_list_17.03_14-38.csv'                   ## Relative path to the csv file containing the planetary parameters, which should be in the same format as the 18_planet_list_27.02_17-17.csv file provided in the GivenResources folder. If your csv file is in a different location, change this path accordingly.
 
 base_out_dir = f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}'
 
@@ -282,9 +282,9 @@ while rowcount < len(planetaryparameters):
 
 	plt.figure(figsize=(12,8))
 	plt.plot(lam,transit_depth * 1e6) #convert transit depth into units of ppm
-	plt.xlabel('Wavelength (um)')
-	plt.ylabel('Transit Depth (ppm)')
-	plt.title(f'[{planet_id}] Transmission Spectrum')
+	plt.xlabel('Wavelength (um)', fontsize=12)
+	plt.ylabel('Transit Depth (ppm)', fontsize=12)
+	plt.title(f'[{planet_id}] Transmission Spectrum', fontsize=14)
 	plt.xlim([0.6,2.8])
 	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}/spectrum plots/planet_spectrum_{planet_id}.png')
 	plt.close()
@@ -360,9 +360,9 @@ while rowcount < len(planetaryparameters):
 	plt.errorbar(wavelength, observed_depth, yerr=errors, fmt='s', color='royalblue', markersize=1, alpha=0.1, label=f'{planet_id} Simulated Data', zorder = 1)
 	plt.plot(wavelength, model_depth, color = 'firebrick', zorder = 2)      
 	plt.ylim([min(model_depth) * 0.9, max(model_depth) * 1.1])
-	plt.xlabel('Wavelength ($\mu$m)', fontsize=8)
-	plt.ylabel('Transit Depth (ppm)', fontsize=8)
-	plt.title(f'PandExo Simulated Observation for {planet_id}', fontsize=10)
+	plt.xlabel('Wavelength ($\mu$m)', fontsize=12)
+	plt.ylabel('Transit Depth (ppm)', fontsize=12)
+	plt.title(f'PandExo Simulated Observation for {planet_id}', fontsize=14)
 	plt.xlim(0.6, 2.8)
 	plt.legend(frameon=True)
 	plt.grid(True, alpha=0.3)
@@ -372,9 +372,9 @@ while rowcount < len(planetaryparameters):
 	plt.figure(figsize=(10, 4))
 	plt.imshow(saturation_2d, origin='lower', aspect='auto', cmap='magma')
 	plt.colorbar(label='Saturation Flag')
-	plt.title('2D Saturation Profile')
-	plt.xlabel('Spectral Pixel')
-	plt.ylabel('Spatial Pixel')
+	plt.title('2D Saturation Profile', fontsize=14)
+	plt.xlabel('Spectral Pixel', fontsize=12)
+	plt.ylabel('Spatial Pixel', fontsize=12)
 	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}/JWST saturation plots/{planet_id}_JWSTsaturation.png')
 	plt.close()
 
