@@ -357,13 +357,14 @@ while rowcount < len(planetaryparameters):
 
 	saturation_2d = result['PandeiaOutTrans']['2d']['saturation']        # 2D saturation array (1 if saturated, 0 if not)
 	
+	plt.figure(figsize=(12,6))
 	plt.errorbar(wavelength, observed_depth, yerr=errors, fmt='s', color='royalblue', markersize=1, alpha=0.1, label=f'{planet_id} Simulated Data', zorder = 1)
 	plt.plot(wavelength, model_depth, color = 'firebrick', zorder = 2)      
 	plt.ylim([min(model_depth) * 0.9, max(model_depth) * 1.1])
 	plt.xlabel('Wavelength ($\mu$m)', fontsize=12)
 	plt.ylabel('Transit Depth (ppm)', fontsize=12)
 	plt.title(f'PandExo Simulated Observation for {planet_id}', fontsize=14)
-	plt.xlim(0.6, 2.8)
+	plt.xlim(min(wavelength), max(wavelength))
 	plt.legend(frameon=True)
 	plt.grid(True, alpha=0.3)
 	plt.savefig(f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}/JWST plots/{planet_id}_JWSTsimulation.png')
