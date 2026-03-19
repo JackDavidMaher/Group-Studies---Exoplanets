@@ -16,7 +16,7 @@ PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 # This sets the environment variables for pandeia_refdata and PYSYN_CDBS to the values in the .env file, which should be set to the correct paths on your system. If these environment variables are already set in your system, this will not change them.
 
 ## CHANGE PATH IF NEED BE ##
-filedirectory = '16 planets data'   ##  name of folder just change number
+filedirectory = '16 planets data new trend'   ##  name of folder just change number
 planet_list =  '/Code/Data/16_planet_list_19.03_14-41.csv'                   ## Relative path to the csv file containing the planetary parameters, which should be in the same format as the 18_planet_list_27.02_17-17.csv file provided in the GivenResources folder. If your csv file is in a different location, change this path accordingly.
 
 base_out_dir = f'{PROJECT_DIR}/Group 1 Full Loop Code/data/{filedirectory}'
@@ -110,8 +110,11 @@ def bin_spectrum(wave, flux, model, error, bin_width = 0.0225):
             
     return np.array(binned_wave), np.array(binned_flux),np.array(binned_model), np.array(binned_err)
 
+# def pressure(t):
+#     return 2.5e-5*(t**2) - (0.0275*t) + 4.5 
+
 def pressure(t):
-    return 2.5e-5*(t**2) - (0.0275*t) + 4.5 
+	return 1.7e-5*(t**2) - (0.023*t) + 5.8 
 
 rowcount = 0 
 while rowcount < len(planetaryparameters):
