@@ -114,7 +114,7 @@ def bin_spectrum(wave, flux, model, error, bin_width = 0.0225):
 #     return 2.5e-5*(t**2) - (0.0275*t) + 4.5 
 
 def pressure(t):
-	return 1.7e-5*(t**2) - (0.023*t) + 5.8 
+    return 3e-5*(t**2) - (0.04*t) + 11 
 
 rowcount = 0 
 while rowcount < len(planetaryparameters):
