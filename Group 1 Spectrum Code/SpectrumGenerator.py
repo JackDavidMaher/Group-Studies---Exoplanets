@@ -16,7 +16,7 @@ def pressure_old(t):
     return 2.5e-5*(t**2) - (0.0275*t) + 4.5 
 
 def pressure(t):
-    return 1.7e-5*(t**2) - (0.023*t) + 5.8 
+    return 3e-5*(t**2) - (0.04*t) + 11 
     
 	
 # This section runs the SpectrumImageCleaner to remove any existing spectrums from the computer so dupliucates are not created
