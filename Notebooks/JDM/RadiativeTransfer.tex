@@ -1,6 +1,8 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage[top=2.8cm, bottom=2.8cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage[numbers,sort&compress]{natbib}
 \title{Y3S2 Group Project Explaining the Code}
 \author{Jack D. Maher (jxm1517)}
 \date{February 2026}
@@ -9,23 +11,58 @@
 \section{Pre-processing}
 \subsection{Atmospheric Assumptions and Composition}
 \label{Section:AtmosphericAssumptions}
-When forming a model absorption spectrum, our script takes the input planetary parameters and assumes a one-dimensional, isothermal atmosphere with a constant composition ratio, where pressure $(P)$ decreases with radial distance $(r)$ according to $P(r) \propto \frac{1}{r^2}$.
-The atmosphere is assumed to behave as an ideal gas, so the number density $(n)$ is calculated as $n = \frac{P}{k_B T}$ where $k_B$ is the Boltzmann constant and $T$ is the temperature.
-The cloud deck (at a specified pressure) is treated as a hard cutoff and is assumed to be 100\% opaque below that level.
-\newline
-The opacity is calculated wavelength-by-wavelength from the cross-section files for each gas. 
-These values are interpolated and then weighted by number density and mixing ratio before being combined to calculate the transit depth at each wavelength.
+
+\subsubsection{One-Dimensional Isothermal Atmosphere}
+\label{OneDimensionalIsothermalAtmosphere}
+When forming a model absorption spectrum, our script takes the input planetary parameters and assumes a one-dimensional, isothermal atmosphere.
+The one-dimensional approximation neglects latitudinal and longitudinal variations, treating the atmosphere as spherically symmetric.
+This means we do not see the effects of day-night temperature contrasts or banding that can exist in real exoplanet atmospheres.
+
+The assumption of a one-dimensional atmosphere is common in exoplanet atmospheric modeling \cite{Seager2000,Brown2001}. and is a reasonable approximation when the goal is to understand general trends in the spectrum.
+
+\subsubsection{Ideal Gas Assumption}
+\label{IdealGasAssumption}
+The atmosphere is modeled as an ideal gas. 
+Under this assumption, the number density $(n)$ is calculated from the ideal gas law as $n = \frac{P}{k_B T}$ where $k_B$ is the Boltzmann constant and $T$ is the temperature.
+
+This assumption is valid for exoplanet atmospheres at the pressures and temperatures typically probed in transmission spectroscopy. 
+The ideal gas law allows us to directly relate pressure measurements to particle number densities, which are essential for calculating opacity and optical depth.
+
+Under assumptions \ref{OneDimensionalIsothermalAtmosphere} and \ref{IdealGasAssumption} , the pressure $(P)$ decreases with radial distance $(r)$ according to $P(r) \propto \frac{1}{r^2}$, reflecting how pressure falls off in a hydrostatic atmosphere moving outward from the planet.
+
+\subsubsection{Constant Composition}
+The atmosphere is also assumed to have a uniform mixing ratio for each molecules in the atmosphere.
+This means the atmosphere's composition does not vary with altitude or pressure, although the density of the gasses will decrease with altitude as discussed in Section \ref{IdealGasAssumption}.
+In reality, atmospheric composition can vary with height due to diffusive separation and chemical processes \cite{Moses2011-nq}, but this approximation is reasonable and is a standard assumption used in other exoplanet atmospheric studies \cite{Madhusudhan2009-ir}.
+Having a constant composition simplifies the calculation significantly, allowing us to specify the atmosphere's composition once and apply it uniformly across all pressure levels.
+
+\subsubsection{Cloud Deck}
+The cloud deck (at a specified pressure $P_\mathrm{cloud}$) is treated as a hard cutoff and is assumed to be 100\% opaque below that level. 
+This represents an idealized cloud deck where all light is completely blocked below a sharp pressure boundary. 
+This assumption effectively sets an inner radius $r_\mathrm{cloud}$ below which no light is transmitted.
 
 \subsection{Radiative Transfer and Optical Depth}
 \label{Section:RadiativeTransfer}
-When the planet passes in front of the star, light passes through different layers of the atmosphere or hits the opaque interior (clouds or solid surface). Along each light ray, the radiative transfer equation is seen in equation \ref{Eq:RadiativeTransfer}
+When the planet passes in front of the star, some light rays pass through the upper atmosphere while deeper rays are blocked by the opaque interior (clouds or solid surface). The aim of this step is to calculate how much starlight is removed along each ray at each wavelength.
+
+For transmission spectroscopy we track attenuation of the incoming starlight, which is written as
 \begin{equation}
 	I_\lambda(s) = I_{\lambda,0} e^{-\tau_\lambda(s)}
 	\label{Eq:RadiativeTransfer}
 \end{equation}
 where $I_{\lambda,0}$ is the incoming specific intensity from the star, $s$ is the distance along the ray, and $\tau_\lambda$ is the optical depth.
 
-We therefore use the planetary parameters and cross sections to change the wavelength-dependent optical depth, $ d \tau_\lambda = \kappa_\lambda\,\rho\, ds = \sum_i n_i\,\sigma_{\lambda, i}\, ds $, where $\kappa_\lambda$ is the mass absorption coefficient, $\rho$ is the density, $n_i$ is the number density of species $i$ and $\sigma_{\lambda, i}$ is its absorption cross section.
+Therefore, if $\tau_\lambda \ll 1$ the atmosphere is mostly transparent at that wavelength and if $\tau_\lambda \gg 1$ the ray is mostly blocked.
+
+The script then builds the wavelength-dependent optical depth from small path elements using the relation in equation \ref{Eq:WavelenghtDependantOpticalDepth}.
+\begin{equation}
+	d \tau_\lambda = \kappa_\lambda\,\rho\, ds = \sum_i n_i\,\sigma_{\lambda, i}\, ds
+	\label{Eq:WavelenghtDependantOpticalDepth}
+\end{equation}
+
+where $\kappa_\lambda$ is the mass absorption coefficient, $\rho$ is the density, $n_i$ is the number density of species $i$, and $\sigma_{\lambda, i}$ is its absorption cross section.
+
+In other words, each layer contributes an amount of absorption set by how many particles are present and how strongly they absorb at that wavelength. Summing these contributions along the full ray gives $\tau_\lambda$ for that impact parameter. This is the key link between atmospheric structure/composition and the observed spectrum: wavelengths with larger optical depth higher in the atmosphere produce a larger effective transit radius and therefore a deeper transit signal.
 
 \subsection{Pressure Grid and Hydrostatic Equilibrium}
 \label{Section:Hydrostatic}
@@ -97,5 +134,8 @@ In practice these integrals are again evaluated numerically using the discrete $
 
 The result is a model transit depth $ \Delta_\lambda $ as a function of wavelength, which the notebook plots in parts-per-million (ppm).  
 Changing the planetary radius, mass, temperature, mean molecular weight, or cloud-top pressure directly affects the computed scale height and optical depths, and therefore changes the amplitude and shape of the spectral features.
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
 
 \end{document}

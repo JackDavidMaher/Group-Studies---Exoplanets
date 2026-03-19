@@ -1,0 +1,30 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Seager and Sasselov(2000)]{Seager2000}
+S~Seager and D~D Sasselov.
+\newblock Theoretical transmission spectra during extrasolar giant planet transits.
+\newblock \emph{Astrophys. J.}, 537\penalty0 (2):\penalty0 916--921, July 2000.
+\newblock \doi{10.1086/309088}.
+
+\bibitem[Brown(2001)]{Brown2001}
+Timothy~M Brown.
+\newblock Transmission spectra as diagnostics of extrasolar giant planet atmospheres.
+\newblock \emph{Astrophys. J.}, 553\penalty0 (2):\penalty0 1006--1026, June 2001.
+\newblock \doi{10.1086/320950}.
+
+\bibitem[Moses et~al.(2011)Moses, Visscher, Fortney, Showman, Lewis, Griffith, Klippenstein, Shabram, Friedson, Marley, and Freedman]{Moses2011-nq}
+Julianne~I Moses, C~Visscher, J~J Fortney, A~P Showman, N~K Lewis, C~A Griffith, S~J Klippenstein, M~Shabram, A~J Friedson, M~S Marley, and R~S Freedman.
+\newblock {DISEQUILIBRIUM} {CARBON}, {OXYGEN}, {AND} {NITROGEN} {CHEMISTRY} {IN} {THE} {ATMOSPHERES} {OF} {HD} 189733b {AND} {HD} 209458b.
+\newblock \emph{Astrophys. J.}, 737\penalty0 (1):\penalty0 15, August 2011.
+
+\bibitem[Madhusudhan and Seager(2009)]{Madhusudhan2009-ir}
+N~Madhusudhan and S~Seager.
+\newblock A temperature and abundance retrieval method for exoplanet atmospheres.
+\newblock \emph{Astrophys. J.}, 707\penalty0 (1):\penalty0 24--39, December 2009.
+
+\end{thebibliography}
