@@ -1,15 +1,15 @@
 # Fdb version 4
-["bibtex RadiativeTransfer"] 1773938184.00024 "RadiativeTransfer.aux" "RadiativeTransfer.bbl" "RadiativeTransfer" 1773938484.6361 0
+["bibtex RadiativeTransfer"] 1774031908.57285 "RadiativeTransfer.aux" "RadiativeTransfer.bbl" "RadiativeTransfer" 1774031968.76944 0
   "./references.bib" 1773935847.69009 6998 b91d018ec430d674583abfb3c8f0f1bc ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1233624470 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
-  "RadiativeTransfer.aux" 1773938484.52461 3306 69ddeea8e9eeb0cdf9e7b93f5d35c8d4 "pdflatex"
+  "RadiativeTransfer.aux" 1774031968.65525 4076 480fe373d4e58b4103c656b8142a3c7d "pdflatex"
   (generated)
   "RadiativeTransfer.bbl"
   "RadiativeTransfer.blg"
   (rewritten before read)
-["pdflatex"] 1773938484.13264 "/home/jackdavidmaher/Physics/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" "RadiativeTransfer.pdf" "RadiativeTransfer" 1773938484.63673 0
+["pdflatex"] 1774031968.00982 "/home/jackdavidmaher/Physics/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" "RadiativeTransfer.pdf" "RadiativeTransfer" 1774031968.76983 0
   "/etc/texmf/web2c/texmf.cnf" 1773883864.61526 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/jackdavidmaher/Physics/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" 1773938483.92932 10845 b39423bed79dd8184f0a737a4ba5204f ""
+  "/home/jackdavidmaher/Physics/Group-Studies---Exoplanets/Notebooks/JDM/RadiativeTransfer.tex" 1774031967.71156 14089 1efde0199aa9c9ed8b4585d5b03b8c50 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -86,10 +86,11 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1773883874.5836 128028 f533b797fba58d231669ea19e894e23e ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1773926492 6800796 f1b42a17909abf8491f9f98bd084e685 ""
-  "RadiativeTransfer.aux" 1773938484.52461 3306 69ddeea8e9eeb0cdf9e7b93f5d35c8d4 "pdflatex"
-  "RadiativeTransfer.bbl" 1773938184.03379 1568 cdb01411af2a7b09f8bab8657d0cb658 "bibtex RadiativeTransfer"
-  "RadiativeTransfer.out" 1773938484.52561 2106 101bff1ea15d0f659df6223bec7fe105 "pdflatex"
-  "RadiativeTransfer.tex" 1773938483.92932 10845 b39423bed79dd8184f0a737a4ba5204f ""
+  "RadiativeTransfer.aux" 1774031968.65525 4076 480fe373d4e58b4103c656b8142a3c7d "pdflatex"
+  "RadiativeTransfer.bbl" 1774031908.60462 1568 cdb01411af2a7b09f8bab8657d0cb658 "bibtex RadiativeTransfer"
+  "RadiativeTransfer.out" 1774031968.65625 2106 101bff1ea15d0f659df6223bec7fe105 "pdflatex"
+  "RadiativeTransfer.tex" 1774031967.71156 14089 1efde0199aa9c9ed8b4585d5b03b8c50 ""
+  "atmospheric_cross_section.png" 1774026719.92476 311151 74120092f11b5339427fe42bfa245342 ""
   (generated)
   "RadiativeTransfer.aux"
   "RadiativeTransfer.log"
