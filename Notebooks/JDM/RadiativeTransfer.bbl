@@ -1,4 +1,4 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{9}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -26,5 +26,32 @@ Julianne~I Moses, C~Visscher, J~J Fortney, A~P Showman, N~K Lewis, C~A Griffith,
 N~Madhusudhan and S~Seager.
 \newblock A temperature and abundance retrieval method for exoplanet atmospheres.
 \newblock \emph{Astrophys. J.}, 707\penalty0 (1):\penalty0 24--39, December 2009.
+
+\bibitem[Sing et~al.(2015)Sing, Fortney, Nikolov, Wakeford, Kataria, Evans, Aigrain, Ballester, Burrows, Deming, D{\'e}sert, Gibson, Henry, Huitson, Knutson, Etangs, Pont, Showman, Vidal-Madjar, Williamson, and Wilson]{Sing2015-hw-CloudBeingThick}
+David~K Sing, Jonathan~J Fortney, Nikolay Nikolov, Hannah~R Wakeford, Tiffany Kataria, Thomas~M Evans, Suzanne Aigrain, Gilda~E Ballester, Adam~S Burrows, Drake Deming, Jean-Michel D{\'e}sert, Neale~P Gibson, Gregory~W Henry, Catherine~M Huitson, Heather~A Knutson, Alain Lecavelier~Des Etangs, Frederic Pont, Adam~P Showman, Alfred Vidal-Madjar, Michael~H Williamson, and Paul~A Wilson.
+\newblock A continuum from clear to cloudy hot-jupiter exoplanets without primordial water depletion.
+\newblock December 2015.
+
+\bibitem[Bouguer(1729)]{Bouguer1729}
+Pierre Bouguer.
+\newblock \emph{Essai d'optique sur la gradation de la lumi{\`e}re}.
+\newblock Chez Claude Jombert, Paris, 1729.
+\newblock Accessible sur Gallica et Archive.org.
+
+\bibitem[Virtanen et~al.(2020)Virtanen, Gommers, Oliphant, Haberland, Reddy, Cournapeau, Burovski, Peterson, Weckesser, Bright, {van der Walt}, Brett, Wilson, Millman, Mayorov, Nelson, Jones, Kern, Larson, Carey, Polat, Feng, Moore, {VanderPlas}, Laxalde, Perktold, Cimrman, Henriksen, Quintero, Harris, Archibald, Ribeiro, Pedregosa, {van Mulbregt}, and {SciPy 1.0 Contributors}]{Scipy2020}
+Pauli Virtanen, Ralf Gommers, Travis~E. Oliphant, Matt Haberland, Tyler Reddy, David Cournapeau, Evgeni Burovski, Pearu Peterson, Warren Weckesser, Jonathan Bright, St{\'e}fan~J. {van der Walt}, Matthew Brett, Joshua Wilson, K.~Jarrod Millman, Nikolay Mayorov, Andrew R.~J. Nelson, Eric Jones, Robert Kern, Eric Larson, C~J Carey, {\.I}lhan Polat, Yu~Feng, Eric~W. Moore, Jake {VanderPlas}, Denis Laxalde, Josef Perktold, Robert Cimrman, Ian Henriksen, E.~A. Quintero, Charles~R. Harris, Anne~M. Archibald, Ant{\^o}nio~H. Ribeiro, Fabian Pedregosa, Paul {van Mulbregt}, and {SciPy 1.0 Contributors}.
+\newblock {{SciPy} 1.0: Fundamental Algorithms for Scientific Computing in Python}.
+\newblock \emph{Nature Methods}, 17:\penalty0 261--272, 2020.
+\newblock \doi{10.1038/s41592-019-0686-2}.
+
+\bibitem[Richard et~al.(2012)Richard, Gordon, Rothman, Abel, Frommhold, Gustafsson, Hartmann, Hermans, Lafferty, Orton, Smith, and Tran]{Richard2012}
+C~Richard, I~E Gordon, L~S Rothman, M~Abel, L~Frommhold, M~Gustafsson, J-M Hartmann, C~Hermans, W~J Lafferty, G~S Orton, K~M Smith, and H~Tran.
+\newblock New section of the {HITRAN} database: Collision-induced absorption ({CIA}).
+\newblock \emph{J. Quant. Spectrosc. Radiat. Transf.}, 113\penalty0 (11):\penalty0 1276--1285, July 2012.
+
+\bibitem[Freedman et~al.(2008)Freedman, Marley, and Lodders]{Freedman2008}
+Richard~S Freedman, Mark~S Marley, and Katharina Lodders.
+\newblock Line and mean opacities for ultracool dwarfs and extrasolar planets.
+\newblock \emph{Astrophys. J. Suppl. Ser.}, 174\penalty0 (2):\penalty0 504--513, February 2008.
 
 \end{thebibliography}
