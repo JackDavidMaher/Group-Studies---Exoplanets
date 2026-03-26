@@ -22,3 +22,6 @@ Team Lead 1 & 2 - Jack Maher and Stan Ellison (Respectively)
 
 
 Anjali's email: a.a.a.piette@bham.ac.uk
+
+### Cross Sections Sources
+H2O, CO and CO2 cross-sections used the HITEMP database from Rothman et al., CH4 used the ExoMol database, and CIA used the HITRAN database
